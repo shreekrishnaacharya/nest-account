@@ -1,0 +1,63 @@
+version: "3"
+services:
+  api:
+    container_name: nestjs_ecommerce_api
+    depends_on:
+      - db
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env
+    command: npm run start:dev
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+    - ecommerce
+    restart: always
+    tty: true
+    working_dir: /var/www/nest-ecommerce-api
+  db:
+    container_name: nestjs_ecommerce_api_postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+    ports:
+    - "5432:5432"
+    volumes:
+      - ecommerce-db-data:/var/lib/postgresql/data
+    networks:
+    - ecommerce
+  pgadmin:
+    links:
+    - db:db
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+    - "5555:80"
+    depends_on:
+        - db
+    volumes:
+    - pgadmin-data:/var/lib/pgadmin
+    networks:
+    - ecommerce
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+volumes:
+  ecommerce-db-data:
+  pgadmin-data:
+
+networks:
+  ecommerce:
+    name: nginx-proxy
+    external: true
+    driver: bridge

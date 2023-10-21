@@ -1,0 +1,47 @@
+image: node:14.16.0-alpine
+
+before_script:
+  - npm install
+
+stages:
+    - build
+    - test
+    - deploy
+    - notify
+
+cache:
+  paths:
+    - node_modules/
+
+test_unit:
+    stage: test
+    script:
+        - npm run test
+
+test_e2e:
+    stage: test
+    script:
+        - npm run test:e2e
+
+deploy_prod:
+    stage: deploy
+    script:
+      - apk update
+      - apk add git
+      - apk add bash
+      - 'which ssh-agent || ( apk add openssh-client )'
+      - eval $(ssh-agent -s)
+      - printenv SSH_PRIVATE_KEY | ssh-add -
+      - mkdir -p ~/.ssh
+      - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      - ssh ec2-user@$DEPLOY_SERVER_IP 'bash' < ./deploy/updateAndRestart.sh
+    only:
+      - master
+
+notify:
+    stage: notify
+    script:
+        - echo "deployed successfull for branch $CI__COMMIT_BRANCH"
+    only:
+        - develop
+        - master
