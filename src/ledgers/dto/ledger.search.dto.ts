@@ -13,7 +13,6 @@ export class LedgerSearchDto extends QueryDto {
 
   @ApiProperty({ required: false })
   @IsString()
-  @Type(() => String)
   @IsOptional()
   code: string;
 

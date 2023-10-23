@@ -5,7 +5,6 @@ import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 export class VoucherMetaDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'Ledger should not be empty' })
-  @Type(() => String)
   ledgerId: string;
 
   @ApiProperty()
@@ -16,16 +15,13 @@ export class VoucherMetaDto {
 
   @ApiProperty()
   @IsOptional()
-  @Type(() => String)
   narration: string;
 
   @ApiProperty()
   @IsOptional()
-  @Type(() => String)
   reference_no: string;
 
   @ApiProperty()
   @IsOptional()
-  @Type(() => String)
   reference_date: string;
 }

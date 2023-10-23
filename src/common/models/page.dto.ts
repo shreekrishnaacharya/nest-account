@@ -18,11 +18,9 @@ export class PageDto {
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
-  @Type(() => String)
   public _sort: string;
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
-  @Type(() => String)
   public _order: string;
 }
