@@ -1,35 +1,36 @@
 import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsDate, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsDate, IsDateString, IsNotEmpty, IsString } from "class-validator";
 import { IsDateInFormat } from "src/common/rules/isdateinformat";
 import { ErrorMessage } from "src/errors/error";
 import { VoucherMetaDto } from "./voucher.meta.dto";
+import { Type } from "class-transformer";
 
 export class VoucherEntryDto {
   @ApiProperty({ type: [VoucherMetaDto] })
-  @IsArray()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Dr entry should not be empty' })
+  @Type(() => Array<VoucherMetaDto>)
   drEntry: VoucherMetaDto[];
 
   @ApiProperty({ type: [VoucherMetaDto] })
   @IsArray()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Cr entry should not be empty' })
+  @Type(() => Array<VoucherMetaDto>)
   crEntry: VoucherMetaDto[];
 
   @ApiProperty()
-  @IsDate()
-  @IsDateInFormat("YYYY-MM-DD")
-  @IsNotEmpty()
+  @IsDateString(undefined, { message: 'Invalid date format. Please use the format YYYY-MM-DD' })
+  @IsNotEmpty({ message: 'English date should not be empty' })
   transaction_date_en: string;
 
   @ApiProperty()
   @IsDateInFormat("YYYY-MM-DD")
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Nepali date should not be empty' })
   transaction_date_np: string;
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Narration should not be empty' })
   narration: string;
 
   isValidEntry = () => {

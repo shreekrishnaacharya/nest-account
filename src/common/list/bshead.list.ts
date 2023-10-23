@@ -1,6 +1,10 @@
 import { BsHeads, BsType, DrCr } from "../enums/all.enum";
 
 export const BsHeadList = {
+  [BsHeads.RESERVE_AND_SURPLUS]: {
+    account_side: DrCr.DR,
+    bs_type: BsType.Capital,
+  },
   [BsHeads.CURRENT_ASSETS]: {
     account_side: DrCr.CR,
     bs_type: BsType.Assets,
@@ -10,11 +14,11 @@ export const BsHeadList = {
     bs_type: BsType.Assets,
   },
   [BsHeads.CURRENT_LIABILITIES]: {
-    account_side: DrCr.CR,
+    account_side: DrCr.DR,
     bs_type: BsType.Liabilities,
   },
   [BsHeads.LOAN_PAYABLE]: {
-    account_side: DrCr.CR,
+    account_side: DrCr.DR,
     bs_type: BsType.Liabilities,
   },
   [BsHeads.DIRECT_INCOME]: {

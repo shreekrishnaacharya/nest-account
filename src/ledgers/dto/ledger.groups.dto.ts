@@ -9,7 +9,7 @@ export class LedgerGroupDto {
   name: string;
 
   @ApiProperty({ type: "enum", enum: BsHeads })
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  bsHead: BsHeads;
+  bs_head: BsHeads;
 }

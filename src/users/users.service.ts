@@ -12,7 +12,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
-  ) {}
+  ) { }
 
   public async findByEmail(email: string): Promise<User | undefined> {
     return (
@@ -28,6 +28,7 @@ export class UsersService {
     return (
       await this.usersRepository.find({
         // relations: ['account'],
+        select: { password: true, email: true, phone: true, username: true },
         where: [{ email: email }, { phone: email }],
         take: 1,
       })

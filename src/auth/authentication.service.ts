@@ -14,10 +14,11 @@ export class AuthenticationService {
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     private readonly refreshTokensService: RefreshTokensService
-  ) {}
+  ) { }
 
   public async validateUser(username: string, password: string): Promise<any> {
     const user: User = await this.userService.findByEmailPhone(username);
+    console.log(password, user)
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password, resetToken, ...result } = user;
       return result;

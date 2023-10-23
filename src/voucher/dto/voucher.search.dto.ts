@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 import { VoucherStatus, VoucherType } from "src/common/enums/all.enum";
+import { QueryDto } from "src/common/trait/query.dto";
 
-export class VoucherSearchDto {
+export class VoucherSearchDto extends QueryDto {
   @ApiProperty({ required: false })
   @IsNumber()
   @IsOptional()

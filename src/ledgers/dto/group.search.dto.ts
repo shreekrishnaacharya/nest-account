@@ -1,27 +1,39 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsOptional, IsString } from "class-validator";
-import { IsRelational } from "src/common/decorators/dto";
-import { Status } from "src/common/enums/all.enum";
+import { IsAndClause, IsLikeCheck, IsRelational } from "src/common/decorators/dto";
 import { QueryDto } from "src/common/trait/query.dto";
 
-export class LedgerSearchDto extends QueryDto {
+export class GroupSearchDto extends QueryDto {
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
+  @IsLikeCheck()
   name: string;
 
   @ApiProperty({ required: false })
   @IsString()
-  @Type(() => String)
   @IsOptional()
-  code: string;
+  @IsLikeCheck()
+  bs_type: string;
 
   @ApiProperty({ required: false })
+  @IsString()
   @IsOptional()
-  @Type(() => Boolean)
-  @IsRelational()
-  ledgerGroup: boolean;
+  @IsLikeCheck()
+  bs_head: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  @IsAndClause()
+  account_side: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  @IsAndClause()
+  is_fixed: string;
 
   @ApiProperty({ required: false })
   @IsBoolean()
@@ -29,14 +41,5 @@ export class LedgerSearchDto extends QueryDto {
   @IsRelational()
   @Type(() => Boolean)
   user: boolean;
-
-  @ApiProperty({
-    type: "enum",
-    enum: Status,
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  status: Status;
 
 }

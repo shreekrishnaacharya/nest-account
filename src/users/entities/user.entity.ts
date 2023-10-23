@@ -21,7 +21,7 @@ export class User extends BaseEntity {
   public username: string;
 
   @ApiProperty()
-  @Column({ nullable: false })
+  @Column({ nullable: false, select: false })
   public password: string;
 
   @ApiProperty()

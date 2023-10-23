@@ -9,6 +9,7 @@ export enum AccountSide {
 }
 
 export enum BsType {
+  Capital = "Capital",
   Assets = "Assets",
   Liabilities = "Liabilities",
   Expenses = "Expenses",

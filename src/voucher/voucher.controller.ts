@@ -9,6 +9,8 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { PStatus } from "src/common/enums/all.enum";
@@ -21,13 +23,15 @@ import { VoucherPage, VoucherResponseDto } from "./dto/voucher.response.dto";
 import { VoucherSearchDto } from "./dto/voucher.search.dto";
 import { VoucherCancel } from "./entities/voucher.cancel.entity";
 import { VoucherService } from "./service/voucher.service";
+import { PageDto } from "src/common/models/page.dto";
+import { IPageable } from "src/common/models/pageable.interface";
 
 @ApiTags("voucher")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller("voucher")
 export class VoucherController {
-  constructor(private voucherService: VoucherService) {}
+  constructor(private voucherService: VoucherService) { }
 
   @ApiResponse({
     type: VoucherPage,
@@ -36,14 +40,19 @@ export class VoucherController {
   @UseInterceptors(TransformResponseInterceptor<VoucherResponseDto>)
   getVouchers(
     @Query() voucherSearchDto: VoucherSearchDto,
-    @Query() pageRequest: PageRequest
+    @Query() pageDto: PageDto
   ): Promise<VoucherPage> {
-    return this.voucherService.getVouchers(pageRequest, voucherSearchDto);
+    const pageable: IPageable = PageRequest.from(pageDto);
+    return this.voucherService.getVouchers(pageable, voucherSearchDto);
   }
 
   @ApiResponse({
     type: VoucherResponseDto,
   })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Post("/purchase")
   addPurchase(
     @Body() voucherDto: VoucherEntryDto,
@@ -54,6 +63,10 @@ export class VoucherController {
   @ApiResponse({
     type: VoucherResponseDto,
   })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Post("/journal")
   addJournal(
     @Body() voucherDto: VoucherEntryDto,
@@ -65,6 +78,10 @@ export class VoucherController {
   @ApiResponse({
     type: VoucherResponseDto,
   })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Post("/contra")
   addContra(
     @Body() voucherDto: VoucherEntryDto,
@@ -76,6 +93,10 @@ export class VoucherController {
   @ApiResponse({
     type: VoucherResponseDto,
   })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Post("/payment")
   addPayment(
     @Body() voucherDto: VoucherEntryDto,
@@ -91,6 +112,10 @@ export class VoucherController {
   }
 
   @Post("/cancel")
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   requestCancel(
     @Body() voucherCancelDto: VoucherCancelDto,
     @Request() req
@@ -107,6 +132,10 @@ export class VoucherController {
   }
 
   @Put("/cancel/:id/status")
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   updateCancelVoucherStatus(
     @Param("id") id: string,
     @Body() status: PStatus

@@ -20,6 +20,7 @@ import { VoucherSearchDto } from "../dto/voucher.search.dto";
 import { VoucherCancel } from "../entities/voucher.cancel.entity";
 import { Voucher } from "../entities/voucher.entity";
 import { VoucherMeta } from "../entities/voucher.meta.entity";
+import { IPageable } from "src/common/models/pageable.interface";
 
 @Injectable()
 export class VoucherService extends CommonEntity<Voucher> {
@@ -39,10 +40,10 @@ export class VoucherService extends CommonEntity<Voucher> {
   }
 
   async getVouchers(
-    pageRequest: PageRequest,
+    pageable: IPageable,
     voucherSearchDto: VoucherSearchDto
   ): Promise<Page<Voucher>> {
-    return await this.findAllByPage(pageRequest, voucherSearchDto);
+    return await this.findAllByPage(pageable, voucherSearchDto);
   }
   async addCancelVoucher(voucherCancelDto: VoucherCancelDto, userId: string) {
     const cancelVoucher = this.voucherCancelRepository.create({
@@ -188,7 +189,7 @@ export class VoucherService extends CommonEntity<Voucher> {
     accountId: number,
     searchTerm: VoucherSearchDto
   ): Promise<any> {
-    Object.keys(searchTerm).map((e) => {});
+    Object.keys(searchTerm).map((e) => { });
   }
   // private async _generateSearchWhereClause(accountId: number, searchTerm: VoucherSearchDto): Promise<any> {
   //   // const ilike = Raw(alias => `${alias} ILIKE '%${searchTerm.replace("/\s/g", "%")}%'`)

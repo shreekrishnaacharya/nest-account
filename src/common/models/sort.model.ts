@@ -4,40 +4,49 @@ import { ISortable } from "./sortable.interface";
 
 export class Sort implements ISortable {
   @ApiProperty({ required: false })
-  public direction: SortDirection;
+  public direction: string;
   @ApiProperty({ required: false })
   public column: string;
 
   constructor(
-    column: string = "id",
-    direction: SortDirection = SortDirection.ASCENDING
+    column: string = "createdAt",
+    direction: string = SortDirection.DESCENDING
   ) {
     this.direction = direction;
     this.column = column;
   }
 
-  public getSortDirection(): SortDirection {
-    return this.direction;
+  public getSortDirection(): Array<string> {
+    return this.direction.split(",");
   }
 
-  public getSortColumn(): string {
-    return this.column;
+  public getSortColumn(): Array<string> {
+    return this.column.split(",");
   }
 
   public asKeyValue(): { [key: string]: string } {
-    return {
-      [this.getSortColumn()]: this.getSortDirection(),
-    };
+    const direction = this.getSortDirection();
+    const sort = this.getSortColumn()
+    const result: any = {};
+
+    for (let i = 0; i < sort.length; i++) {
+      const key = sort[i];
+      const value = direction[i];
+
+      if (key.includes(".")) {
+        const [parent, child] = key.split(".");
+        if (!result[parent]) {
+          result[parent] = {};
+        }
+        result[parent][child] = value;
+      } else {
+        result[key] = value;
+      }
+    }
+    return result
   }
 
   public static from(column: string, direction: string): ISortable {
-    switch (direction.toUpperCase()) {
-      case "ASC":
-        return new Sort(column, SortDirection.ASCENDING);
-      case "DESC":
-        return new Sort(column, SortDirection.DESCENDING);
-      default:
-        return new Sort(column, SortDirection.ASCENDING);
-    }
+    return new Sort(column, direction);
   }
 }

@@ -18,7 +18,7 @@ export class LedgerGroup extends BaseEntity {
   @Column()
   name: string;
 
-  @ApiProperty({ type: "enum", enum: IsFixed })
+  @ApiProperty({ type: "enum", enum: IsFixed, default: IsFixed.NOT_FIXED })
   @Column({ type: "enum", enum: IsFixed, default: IsFixed.NOT_FIXED })
   is_fixed: IsFixed;
 
@@ -28,7 +28,7 @@ export class LedgerGroup extends BaseEntity {
 
   @ApiProperty({ type: "enum", enum: BsHeads })
   @Column({ type: "enum", enum: BsHeads })
-  bsHead: BsHeads;
+  bs_head: BsHeads;
 
   @ApiProperty({ type: "enum", enum: BsType })
   @Column({ type: "enum", enum: BsType })
@@ -44,12 +44,15 @@ export class LedgerGroup extends BaseEntity {
     lazy: true,
   })
   @JoinColumn({ name: "user_id" })
-  user: () => User;
+  user;
 
   @BeforeUpdate()
   @BeforeInsert()
   public beforeInsertAndUpdate() {
-    const { account_side, bs_type } = BsHeadList[this.bsHead];
+    // console.log(BsHeadList);
+    console.log("thisis bs_head", this.bs_head)
+    const { account_side, bs_type } = BsHeadList[this.bs_head];
+    console.log(account_side, bs_type)
     this.account_side = account_side;
     this.bs_type = bs_type;
   }

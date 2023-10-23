@@ -31,19 +31,18 @@ export class Ledger extends BaseEntity {
   @Column({ default: Status.ACTIVE })
   status: Status;
 
-  // @ApiProperty({ type: LedgerGroup })
   @ManyToOne(() => LedgerGroup, (ledgerGroup) => ledgerGroup.id, {
     onDelete: "CASCADE",
-    lazy: true,
+    // lazy: true,
   })
   @JoinColumn({ name: "ledger_group_id" })
-  ledgerGroup: () => LedgerGroup;
+  ledgerGroup: LedgerGroup;
 
   // @ApiProperty({ type: User })
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: "CASCADE",
-    lazy: true,
+    // lazy: true,
   })
   @JoinColumn({ name: "user_id" })
-  user: () => User;
+  user: User;
 }

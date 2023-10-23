@@ -1,29 +1,31 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 export class VoucherMetaDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Ledger should not be empty' })
+  @Type(() => String)
   ledgerId: string;
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsNumber({}, { message: 'Amount should be number' })
+  @IsNotEmpty({ message: 'Amount should not be empty' })
+  @Type(() => Number)
   amount: number;
 
   @ApiProperty()
-  @IsString()
   @IsOptional()
+  @Type(() => String)
   narration: string;
 
   @ApiProperty()
-  @IsNumber()
   @IsOptional()
+  @Type(() => String)
   reference_no: string;
 
   @ApiProperty()
-  @IsNumber()
   @IsOptional()
+  @Type(() => String)
   reference_date: string;
 }

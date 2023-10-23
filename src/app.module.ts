@@ -6,6 +6,8 @@ import { FiscalYearModule } from "./fiscal-year/fiscalyear.module";
 import { InvoiceModule } from "./invoice/invoice.module";
 import { LedgersModule } from "./ledgers/ledgers.module";
 import { VoucherModule } from "./voucher/voucher.module";
+import { SeederService } from "./common/seeder/service";
+import { SeederModule } from "./common/seeder/seeder.module";
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import { VoucherModule } from "./voucher/voucher.module";
     FiscalYearModule,
     VoucherModule,
     InvoiceModule,
+    SeederModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -8,6 +8,8 @@ import { In, Repository } from "typeorm";
 import { LedgerDto } from "../dto/ledger.dto";
 import { LedgerSearchDto } from "../dto/ledger.search.dto";
 import { Ledger } from "../entities/ledger.entity";
+import { IPageable } from "src/common/models/pageable.interface";
+import { IQueryDto } from "src/common/trait/query.dto";
 
 @Injectable()
 export class LedgerService extends CommonEntity<Ledger> {
@@ -27,11 +29,12 @@ export class LedgerService extends CommonEntity<Ledger> {
   }
 
   async getLedgers(
-    pageRequest: PageRequest,
-    ledgerSearchDto: LedgerSearchDto
+    pageable: IPageable,
+    ledgerSearchDto: IQueryDto
   ): Promise<Page<Ledger>> {
-    return this.findAllByPage(pageRequest, ledgerSearchDto);
+    return this.findAllByPage(pageable, ledgerSearchDto);
   }
+
 
   async getLedgerByIds(ledgerIds: Array<string>): Promise<Ledger[]> {
     const ledgers = await this.ledgerRepository.find({

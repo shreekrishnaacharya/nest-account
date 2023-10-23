@@ -2,60 +2,45 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IPageable } from "./pageable.interface";
 import { Sort } from "./sort.model";
 import { ISortable } from "./sortable.interface";
+import { SortDirection } from "../enums/response-status.enum";
+import { PageDto } from "./page.dto";
 
 export class PageRequest implements IPageable {
-  @ApiProperty({ required: false })
-  public page: number;
-  @ApiProperty({ required: false })
-  public size: number;
-  @ApiProperty({ type: Sort, required: false })
+  public skip: number;
+  public take: number;
   public sort: ISortable;
 
   constructor(
-    page: number = 1,
-    size: number = 10,
+    skip: number = 0,
+    take: number = 10,
     sort: ISortable = new Sort()
   ) {
-    this.page = page;
-    this.size = size;
+    this.skip = skip;
+    this.take = take;
     this.sort = sort;
   }
 
-  public getPageNumber(): number {
-    return this.page;
+  public getSkip(): number {
+    return this.skip;
   }
 
-  public getPageSize(): number {
-    return this.size;
+  public getTake(): number {
+    return this.take;
   }
 
   public getSort(): ISortable {
     return this.sort;
   }
 
-  public next(totalElements: number): IPageable {
-    const totalPages: number =
-      Math.ceil(totalElements / this.getPageSize()) || 1;
-    const nextPage: number =
-      +this.getPageNumber() === totalPages ? 1 : +this.getPageNumber() + 1;
-    return new PageRequest(nextPage, this.getPageSize(), this.getSort());
-  }
-
-  public previous(totalElements: number): IPageable {
-    const totalPages: number =
-      Math.ceil(totalElements / this.getPageSize()) || 1;
-    const previousPage: number =
-      +this.getPageNumber() === 1 ? totalPages : +this.getPageNumber() - 1;
-    return new PageRequest(previousPage, this.getPageSize(), this.getSort());
-  }
-
-  public static from(
-    page: number,
-    size: number,
-    sortColumn: string,
-    sortDirection: string
-  ): IPageable {
-    const sort: ISortable = Sort.from(sortColumn, sortDirection);
-    return new PageRequest(page, size, sort);
+  public static from(pageDto: PageDto): IPageable {
+    let { _sort, _order, _start, _end } = pageDto
+    if (!_start) {
+      _start = 0;
+    }
+    if (!_end) {
+      _end = 10;
+    }
+    const pageSize = _end - _start;
+    return new PageRequest(_start, pageSize, Sort.from(_sort, _order));
   }
 }
