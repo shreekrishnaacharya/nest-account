@@ -1,7 +1,9 @@
 export enum LedgerGroupTypes {
+  OTHER = "other",
   CASH = "cash",
   SALARY = "salary",
   VENDOR = "vendor",
+  EMPLOYEEE = "employee"
 }
 
 export enum LedgerTypes {

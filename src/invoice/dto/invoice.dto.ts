@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { IsDateInFormat } from "src/common/rules/isdateinformat";
+import { IsDateInFormat } from "src/common/rules";
 import { InvoiceItemDto } from "./invoice.item.dto";
 
 export class InvoiceDto {

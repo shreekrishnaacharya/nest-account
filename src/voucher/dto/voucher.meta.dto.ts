@@ -1,15 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional,Min } from "class-validator";
 
 export class VoucherMetaDto {
   @ApiProperty()
-  @IsNotEmpty({ message: 'Ledger should not be empty' })
-  ledgerId: string;
+  @IsNotEmpty({ message: 'Ledger cannot be empty' })
+  ledger_id: string;
 
   @ApiProperty()
+  @IsNotEmpty({ message: 'Amount cannot be empty' })
   @IsNumber({}, { message: 'Amount should be number' })
-  @IsNotEmpty({ message: 'Amount should not be empty' })
+  @Min(1)
   @Type(() => Number)
   amount: number;
 

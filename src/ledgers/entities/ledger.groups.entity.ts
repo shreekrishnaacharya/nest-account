@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BsHeads, BsType, DrCr, IsFixed } from "src/common/enums/all.enum";
+import { LedgerGroupTypes } from "src/common/enums/ledger.group";
 import { BsHeadList } from "src/common/list/bshead.list";
 import { BaseEntity } from "src/database/entities/base.entity";
 import { User } from "src/users/entities/user.entity";
@@ -34,6 +35,9 @@ export class LedgerGroup extends BaseEntity {
   @Column({ type: "enum", enum: BsType })
   bs_type: BsType;
 
+  @Column({ type: "enum", enum: LedgerGroupTypes, default: LedgerGroupTypes.OTHER })
+  group_type: LedgerGroupTypes;
+
   @ApiProperty({ type: "enum", enum: DrCr })
   @Column({ type: "enum", enum: DrCr })
   account_side: DrCr;
@@ -44,7 +48,7 @@ export class LedgerGroup extends BaseEntity {
     lazy: true,
   })
   @JoinColumn({ name: "user_id" })
-  user;
+  user: User;
 
   @BeforeUpdate()
   @BeforeInsert()

@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { DrCr } from "src/common/enums/all.enum";
-import { BaseEntity } from "src/database/entities/base.entity";
 import { Ledger } from "src/ledgers/entities/ledger.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Voucher } from "./voucher.entity";
+import { BaseMinEntity } from "src/database/entities/base.min.entity";
 
 @Entity()
-export class VoucherMeta extends BaseEntity {
+export class VoucherMeta extends BaseMinEntity {
   @ApiProperty()
   @Column()
   serial_no: number;

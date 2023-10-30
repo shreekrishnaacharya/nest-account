@@ -9,6 +9,7 @@ import { BsHeads } from "src/common/enums/all.enum";
 import { IPageable } from "src/common/models/pageable.interface";
 import { Page } from "src/common/models/page.model";
 import { IQueryDto } from "src/common/trait/query.dto";
+import { LedgerGroupTypes } from "src/common/enums/ledger.group";
 
 @Injectable()
 export class LedgerGroupService extends CommonEntity<LedgerGroup> {
@@ -74,5 +75,11 @@ export class LedgerGroupService extends CommonEntity<LedgerGroup> {
     const { name, bs_head } = ledgerGroupDto;
     ledgerGroupToUpdate.name = name;
     ledgerGroupToUpdate.bs_head = bs_head
+  }
+
+  async getLedgerGroupTypeId(group: LedgerGroupTypes): Promise<string> {
+    return await this.ledgerGroupRepository.findOne({
+      where: { group_type: group }
+    }).then(e => e.id)
   }
 }

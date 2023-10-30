@@ -6,6 +6,10 @@ import { CustomValidationPipe } from "./common/inject/error.response";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // app.use((req: any, res: any, next: any) => {
+  //   console.log("hello", req.body)
+  //   next(req, res);
+  // })
   const config = new DocumentBuilder()
     .setTitle("Account API")
     .setDescription("Account api using NestJS")
@@ -46,6 +50,7 @@ async function bootstrap() {
   //   // disableErrorMessages: true,
   // }));
   app.useGlobalPipes(new CustomValidationPipe());
+
   await app.listen(5000);
 }
 bootstrap();

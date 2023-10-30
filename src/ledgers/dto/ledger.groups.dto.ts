@@ -4,12 +4,10 @@ import { BsHeads } from "src/common/enums/all.enum";
 
 export class LedgerGroupDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: "Name cannot be empty" })
   name: string;
 
   @ApiProperty({ type: "enum", enum: BsHeads })
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: "Bs head cannot be empty" })
   bs_head: BsHeads;
 }

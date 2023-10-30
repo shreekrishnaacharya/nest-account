@@ -10,6 +10,7 @@ import { LedgerSearchDto } from "../dto/ledger.search.dto";
 import { Ledger } from "../entities/ledger.entity";
 import { IPageable } from "src/common/models/pageable.interface";
 import { IQueryDto } from "src/common/trait/query.dto";
+import { LedgerGroupTypes } from "src/common/enums/ledger.group";
 
 @Injectable()
 export class LedgerService extends CommonEntity<Ledger> {
@@ -80,4 +81,6 @@ export class LedgerService extends CommonEntity<Ledger> {
     ledgerToUpdate.ledger_group_id = ledger_group_id;
     ledgerToUpdate.code = code;
   }
+
+
 }

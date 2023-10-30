@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DrCr, VoucherType } from "src/common/enums/all.enum";
-import { IsNotEmptyString } from "src/common/rules/isdateinformat";
+import { IsNotEmptyString } from "src/common/rules";
 import { ErrorMessage } from "src/errors/error";
 import { FiscalYearService } from "src/fiscal-year/fiscalyear.service";
 import { LedgerService } from "src/ledgers/service/ledgers.service";
@@ -71,10 +71,9 @@ export class VoucherReportService {
     userId: string,
     voucherType: VoucherType
   ): Promise<Voucher> {
-    journalVoucher.isValidEntry();
     //check ledgers list validity
-    const drList = journalVoucher.drEntry.map((e) => e.ledgerId);
-    const crList = journalVoucher.crEntry.map((e) => e.ledgerId);
+    const drList = journalVoucher.drEntry.map((e) => e.ledger_id);
+    const crList = journalVoucher.crEntry.map((e) => e.ledger_id);
     const ledgersList = [...drList, ...crList];
     const ledgers = await this.ledgerService.getLedgerByIds(ledgersList);
     if (ledgers.length != ledgersList.length) {
@@ -99,28 +98,28 @@ export class VoucherReportService {
 
     let serial_count = 0;
     const drentry = journalVoucher.drEntry.map((e) => {
-      const { amount, ledgerId, reference_no, reference_date, narration } = e;
+      const { amount, ledger_id, reference_no, reference_date, narration } = e;
       serial_count++;
       return this.voucherMetaRepository.create({
         amount,
         dr_cr: DrCr.DR,
         serial_no: serial_count,
         narration: IsNotEmptyString(narration) ? narration : drNarration,
-        ledger_id: ledgerId,
+        ledger_id: ledger_id,
         reference_no,
         reference_date,
       });
     });
 
     const crentry = journalVoucher.crEntry.map((e) => {
-      const { amount, ledgerId, reference_no, reference_date, narration } = e;
+      const { amount, ledger_id, reference_no, reference_date, narration } = e;
       serial_count++;
       return this.voucherMetaRepository.create({
         amount,
         dr_cr: DrCr.CR,
         serial_no: serial_count,
         narration: IsNotEmptyString(narration) ? narration : crNarration,
-        ledger_id: ledgerId,
+        ledger_id: ledger_id,
         reference_no,
         reference_date,
       });

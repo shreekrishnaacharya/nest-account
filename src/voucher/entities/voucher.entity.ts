@@ -17,7 +17,7 @@ export class Voucher extends BaseEntity {
   transaction_date_en: Date;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true, default: null })
   voucher_no: number;
 
   @ApiProperty()
@@ -38,7 +38,7 @@ export class Voucher extends BaseEntity {
   fiscal_year_id: string;
 
   @ApiProperty()
-  @Column()
+  @Column({default:null})
   approved_date: Date;
 
   @ApiProperty()

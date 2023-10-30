@@ -72,7 +72,8 @@ export class VoucherController {
     @Body() voucherDto: VoucherEntryDto,
     @Request() req
   ): Promise<VoucherResponseDto> {
-    return this.voucherService.purchaseEntry(voucherDto, req.user.userId);
+    console.log(req.user, voucherDto)
+    return this.voucherService.journalEntry(voucherDto, "jdu0bmIKzYca");
   }
 
   @ApiResponse({

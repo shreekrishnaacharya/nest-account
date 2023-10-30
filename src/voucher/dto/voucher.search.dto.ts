@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsOptional } from "class-validator";
 import { VoucherStatus, VoucherType } from "src/common/enums/all.enum";
 import { QueryDto } from "src/common/trait/query.dto";
 

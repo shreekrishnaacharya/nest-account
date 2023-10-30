@@ -41,7 +41,7 @@ export class InvoiceService {
     journalVoucher.drEntry = [
       {
         amount: totlaAmount,
-        ledgerId: "LEDGER_CASH",
+        ledger_id: "LEDGER_CASH",
         narration: "Receive From " + party_name,
         reference_date: null,
         reference_no: null,
@@ -50,7 +50,7 @@ export class InvoiceService {
     journalVoucher.crEntry = [
       {
         amount: totlaAmount,
-        ledgerId: "LEDGER_SALE",
+        ledger_id: "LEDGER_SALE",
         narration: "Cash From " + party_name,
         reference_date: null,
         reference_no: null,

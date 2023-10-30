@@ -8,7 +8,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { DrCr, PStatus, VoucherType } from "src/common/enums/all.enum";
 import { PageRequest } from "src/common/models/page-request.model";
 import { Page } from "src/common/models/page.model";
-import { IsNotEmptyString } from "src/common/rules/isdateinformat";
+import { IsNotEmptyString } from "src/common/rules";
 import { CommonEntity } from "src/common/trait/entity.trait";
 import { ErrorMessage } from "src/errors/error";
 import { FiscalYearService } from "src/fiscal-year/fiscalyear.service";
@@ -21,6 +21,7 @@ import { VoucherCancel } from "../entities/voucher.cancel.entity";
 import { Voucher } from "../entities/voucher.entity";
 import { VoucherMeta } from "../entities/voucher.meta.entity";
 import { IPageable } from "src/common/models/pageable.interface";
+import { Generator } from "src/common/helpers/id.generator";
 
 @Injectable()
 export class VoucherService extends CommonEntity<Voucher> {
@@ -110,10 +111,9 @@ export class VoucherService extends CommonEntity<Voucher> {
     userId: string,
     voucherType: VoucherType
   ): Promise<Voucher> {
-    journalVoucher.isValidEntry();
     //check ledgers list validity
-    const drList = journalVoucher.drEntry.map((e) => e.ledgerId);
-    const crList = journalVoucher.crEntry.map((e) => e.ledgerId);
+    const drList = journalVoucher.drEntry.map((e) => e.ledger_id);
+    const crList = journalVoucher.crEntry.map((e) => e.ledger_id);
     const ledgersList = [...drList, ...crList];
     const ledgers = await this.ledgerService.getLedgerByIds(ledgersList);
     if (ledgers.length != ledgersList.length) {
@@ -138,28 +138,30 @@ export class VoucherService extends CommonEntity<Voucher> {
 
     let serial_count = 0;
     const drentry = journalVoucher.drEntry.map((e) => {
-      const { amount, ledgerId, reference_no, reference_date, narration } = e;
+      const { amount, ledger_id, reference_no, reference_date, narration } = e;
       serial_count++;
       return this.voucherMetaRepository.create({
+        id: Generator.getId(),
         amount,
         dr_cr: DrCr.DR,
         serial_no: serial_count,
         narration: IsNotEmptyString(narration) ? narration : drNarration,
-        ledger_id: ledgerId,
+        ledger_id: ledger_id,
         reference_no,
         reference_date,
       });
     });
 
     const crentry = journalVoucher.crEntry.map((e) => {
-      const { amount, ledgerId, reference_no, reference_date, narration } = e;
+      const { amount, ledger_id, reference_no, reference_date, narration } = e;
       serial_count++;
       return this.voucherMetaRepository.create({
+        id: Generator.getId(),
         amount,
         dr_cr: DrCr.CR,
         serial_no: serial_count,
         narration: IsNotEmptyString(narration) ? narration : crNarration,
-        ledger_id: ledgerId,
+        ledger_id: ledger_id,
         reference_no,
         reference_date,
       });
@@ -167,9 +169,10 @@ export class VoucherService extends CommonEntity<Voucher> {
     const { transaction_date_en, transaction_date_np, narration } =
       journalVoucher;
     const currentYear = await this.fiscalService.getCurrentYear();
+    console.log("user:", userId)
     const voucherRaw = this.voucherRepository.create({
       fiscal_year_id: currentYear.id,
-      approved_by: userId,
+      posted_by: userId,
       narration,
       transaction_date_en,
       transaction_date_np,
@@ -184,15 +187,4 @@ export class VoucherService extends CommonEntity<Voucher> {
 
     return voucherModel;
   }
-
-  private async _generateSearchWhereClause(
-    accountId: number,
-    searchTerm: VoucherSearchDto
-  ): Promise<any> {
-    Object.keys(searchTerm).map((e) => { });
-  }
-  // private async _generateSearchWhereClause(accountId: number, searchTerm: VoucherSearchDto): Promise<any> {
-  //   // const ilike = Raw(alias => `${alias} ILIKE '%${searchTerm.replace("/\s/g", "%")}%'`)
-
-  // }
 }

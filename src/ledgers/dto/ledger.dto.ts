@@ -1,24 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Status } from "src/common/enums/all.enum";
+import { IsNotEmpty } from "class-validator";
 
 export class LedgerDto {
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Name cannot be empty"})
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Code cannot be empty"})
   code: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({message:"Ledger group cannot be empty"})
   ledger_group_id: string;
 
-  @ApiProperty({
-    enum: Status,
-  })
-  @IsNotEmpty()
-  status: Status;
 }

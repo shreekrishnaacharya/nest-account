@@ -1,3 +1,17 @@
+
+export enum Gender {
+  MALE = "Male",
+  FEMALE = "Female",
+  OTHER = "Other"
+}
+
+export enum EmploymentType {
+  CONTRACT = "Contract",
+  TEMPORARY = "Temporary",
+  PERMANENT = "Permanent"
+}
+
+
 export enum Status {
   ACTIVE = "Active",
   INACTIVE = "Inactive",
@@ -33,6 +47,26 @@ export enum IsFixed {
   NOT_FIXED = "Not Fixed",
 }
 
+export enum MonthList {
+  BAISHAK = "Baishak",
+  JESTHA = "Jestha",
+  ASHARD = "Ashard",
+  SHARWAN = "Sharwan",
+  BHAUDAU = "Bhaudau",
+  ASHOJ = "Ashoj",
+  KARTIK = "Kartik",
+  MANSIR = "Mansir",
+  POUSH = "Poush",
+  MAGH = "Magh",
+  FALGUN = "Falgun",
+  CHAITRA = "Chaitra"
+
+}
+
+export enum PayrollType {
+  PLUS = "Plus",
+  MINUS = "Minus",
+}
 export enum YesNo {
   YES = "Yes",
   NO = "No",
