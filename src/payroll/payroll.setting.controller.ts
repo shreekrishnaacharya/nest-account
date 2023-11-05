@@ -48,6 +48,13 @@ export class PayrollSettingController {
     return this.payrollService.findAllByPage(pageable, payrollSearchDto);
   }
 
+  @ApiResponse({
+    type: PayrollSettingDto,
+  })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Post("/")
   addPayrollSetting(
     @Body() payrollDto: PayrollSettingDto): Promise<PayrollSetting> {
@@ -64,6 +71,13 @@ export class PayrollSettingController {
     return this.payrollService.getOnePayrollSetting(id);
   }
 
+  @ApiResponse({
+    type: PayrollSettingDto,
+  })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Patch("/:id")
   updatePayroll(
     @Param("id") id: string,
