@@ -4,7 +4,9 @@ import { SeederService } from "./common/seeder/service";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService, private readonly seedService: SeederService) { }
+  constructor(private readonly appService: AppService, 
+    private readonly seedService: SeederService
+    ) { }
 
   @Get()
   getHello(): Promise<string> {

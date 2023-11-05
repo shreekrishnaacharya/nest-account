@@ -11,7 +11,10 @@ export class CustomValidationPipe extends NestValidationPipe {
         try {
             // Transform the incoming value into a class instance
             const object = plainToClass(metadata.metatype, value);
-
+            // console.log(object, "hello")
+            if (typeof object !== "object") {
+                return object
+            }
             // Validate the transformed object
             const errors = await validate(object);
 
@@ -30,7 +33,7 @@ export class CustomValidationPipe extends NestValidationPipe {
                 throw new BadRequestException({
                     message: 'Bad Request',
                     statusCode: 400,
-                    error: formattedErrors,
+                    errors: formattedErrors,
                 });
             }
 

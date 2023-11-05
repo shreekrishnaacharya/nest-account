@@ -54,7 +54,7 @@ export class LedgerGroup extends BaseEntity {
   @BeforeInsert()
   public beforeInsertAndUpdate() {
     // console.log(BsHeadList);
-    console.log("thisis bs_head", this.bs_head)
+    // console.log("thisis bs_head", this.bs_head)
     const { account_side, bs_type } = BsHeadList[this.bs_head];
     console.log(account_side, bs_type)
     this.account_side = account_side;

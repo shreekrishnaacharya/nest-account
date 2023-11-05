@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { ArrayNotEmpty, IsArray, IsDateString, IsEnum, IsNotEmpty, IsObject, IsOptional, ValidateNested } from "class-validator";
 import { Transform, Type } from "class-transformer";
 import { IsDateInFormat, IsValidEntry } from "src/common/rules";
-import { EmploymentType, Gender } from "src/common/enums/all.enum";
+import { EmploymentType, Gender, Status } from "src/common/enums/all.enum";
 
 export class EmployeeDto {
   @ApiProperty()
@@ -32,11 +32,11 @@ export class EmployeeDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  phone_1: string;
+  phone1: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  phone_2: string;
+  phone2: string;
 
   @ApiProperty()
   @IsEnum(Gender)
@@ -72,6 +72,10 @@ export class EmployeeDto {
   ledger_name: string;
 
   @ApiProperty({ required: true })
-  @IsOptional({ message: "Ledger code cannot be empty" })
+  @IsNotEmpty({ message: "Ledger code cannot be empty" })
   ledger_code: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  status: Status;
 }

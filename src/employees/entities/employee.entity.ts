@@ -1,25 +1,27 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { EmploymentType, Gender } from "src/common/enums/all.enum";
+import { EmploymentType, Gender, MarriedStatus, Status } from "src/common/enums/all.enum";
 import { BaseEntity } from "src/database/entities/base.entity";
-import { Column, Entity } from "typeorm";
+import { Ledger } from "src/ledgers/entities/ledger.entity";
+import { Column, Entity, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity()
 export class Employee extends BaseEntity {
+
     @ApiProperty()
-    @Column()
+    @Column({ length: 100 })
     name: string;
 
     @ApiProperty({ required: false })
-    @Column({ nullable: true, default: null })
+    @Column({ nullable: true, default: null, length: 30 })
     email: string;
 
     @ApiProperty({ required: false })
-    @Column({ nullable: true, default: null })
-    phone_1: string;
+    @Column({ nullable: true, default: null, length: 20 })
+    phone1: string;
 
     @ApiProperty({ required: false })
-    @Column({ nullable: true, default: null })
-    phone_2: string;
+    @Column({ nullable: true, default: null, length: 20 })
+    phone2: string;
 
     @ApiProperty()
     @Column({ nullable: true, default: null, length: 100 })
@@ -34,27 +36,27 @@ export class Employee extends BaseEntity {
     employment: EmploymentType;
 
     @ApiProperty({ required: false })
-    @Column()
+    @Column({ nullable: true, default: null, length: 50 })
     type: string;
 
     @ApiProperty()
-    @Column()
+    @Column({ nullable: true, default: null, length: 10 })
     dob_np: string;
 
     @ApiProperty({ type: Date })
-    @Column()
+    @Column({ type: "date" })
     dob_en: Date;
 
     @ApiProperty({ required: false })
-    @Column({ nullable: true, default: null })
+    @Column({ nullable: true, default: null, length: 10 })
     doj_np: string;
 
     @ApiProperty({ nullable: true, default: null, type: Date })
-    @Column()
+    @Column({ type: "date" })
     doj_en: Date;
 
     @ApiProperty({ required: false })
-    @Column({ nullable: true, default: null })
+    @Column({ nullable: true, default: null, length: 30 })
     bank_no: string;
 
     @ApiProperty({ required: false })
@@ -66,9 +68,23 @@ export class Employee extends BaseEntity {
     address2: string;
 
     @ApiProperty({ required: false })
-    @Column({ nullable: true, default: null, type: "longtext" })
+    @Column({ nullable: true, default: null, type: "text" })
     qualification: string;
 
-    @Column()
+    @Column({ type: "char", length: 12 })
     ledger_id: string;
+
+    @ApiProperty()
+    @Column({ type: "enum", enum: Status })
+    status: Status;
+
+    @ApiProperty()
+    @Column({ type: "enum", enum: MarriedStatus, default: MarriedStatus.UNMARRIED })
+    married: MarriedStatus;
+
+    @ManyToOne(() => Ledger, (ledger) => ledger.id, {
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "ledger_id" })
+    ledger: Ledger;
 }

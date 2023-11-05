@@ -18,6 +18,7 @@ export class UsersService {
     return (
       await this.usersRepository.find({
         // relations: ['account'],
+        select: { password: true, email: true, phone: true, username: true, id: true },
         where: { email },
         take: 1,
       })
@@ -28,7 +29,7 @@ export class UsersService {
     return (
       await this.usersRepository.find({
         // relations: ['account'],
-        select: { password: true, email: true, phone: true, username: true },
+        select: { password: true, email: true, phone: true, username: true, id: true },
         where: [{ email: email }, { phone: email }],
         take: 1,
       })

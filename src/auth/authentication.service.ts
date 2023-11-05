@@ -18,9 +18,10 @@ export class AuthenticationService {
 
   public async validateUser(username: string, password: string): Promise<any> {
     const user: User = await this.userService.findByEmailPhone(username);
-    console.log(password, user)
+    // console.log(password, user)
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password, resetToken, ...result } = user;
+      console.log(result)
       return result;
     }
     return null;
@@ -41,7 +42,7 @@ export class AuthenticationService {
         tokenPayload.sub
       );
     const user: User = await this.userService.findByEmail(tokenPayload.email);
-
+        console.log(user)
     if (!tokenInDb || !user || tokenInDb.isBlacklisted) {
       throw new BadRequestException("Unable to refresh token");
     }
@@ -74,6 +75,7 @@ export class AuthenticationService {
   }
 
   private async _getRefreshToken(user: User): Promise<string> {
+    console.log(user)
     let refreshToken: RefreshToken =
       await this.refreshTokensService.findNonBlacklistedByUserId(user.id);
     if (!refreshToken) {

@@ -24,7 +24,7 @@ export class AuthenticationController {
   constructor(
     private readonly authService: AuthenticationService,
     private readonly userService: UsersService
-  ) {}
+  ) { }
 
   @UseGuards(LocalAuthenticationGuard)
   @Post("login")
@@ -33,7 +33,8 @@ export class AuthenticationController {
     @Request() req,
     @Body() loginUseDot: LoginUserDto
   ): Promise<AuthenticatedUser> {
-    return this.authService.login(req.user);
+    const loggg = await this.authService.login(req.user)
+    return loggg;
   }
 
   @Post("password-request")

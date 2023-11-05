@@ -5,7 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthenticationModule } from "src/auth/authentication.module";
 import { EmployeeController } from "./employee.controller";
 import { EmployeeService } from "./service/employee.service";
-import { Employee } from "./entities/employee.entities";
+import { Employee } from "./entities/employee.entity";
 import { LedgersModule } from "src/ledgers/ledgers.module";
 
 const passportModule = PassportModule.register({ defaultStrategy: "jwt" });

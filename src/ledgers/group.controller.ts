@@ -63,6 +63,7 @@ export class LedgerGroupController {
     @Request() req
   ): Promise<LedgerGroup> {
     const _user = req.user;
+    console.log(ledgerGroupDto)
     return this.ledgerGroupService.addGroup(ledgerGroupDto, _user.userId);
   }
 

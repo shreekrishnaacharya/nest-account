@@ -6,14 +6,17 @@ import { Repository } from "typeorm";
 import { Payroll } from "../entities/payroll.entity";
 import { PayrollDto } from "../dto/payroll.dto";
 import { PayrollType } from "src/common/enums/all.enum";
+import { CommonEntity } from "src/common/trait/entity.trait";
 
 @Injectable()
-export class PayrollService {
+export class PayrollService extends CommonEntity<Payroll> {
   constructor(
     @InjectRepository(Payroll)
     private payrollRepository: Repository<Payroll>,
     private voucherService: VoucherService
-  ) { }
+  ) {
+    super(payrollRepository);
+  }
   async createPayroll(
     payrollDtos: PayrollDto[],
     employeeId: string,

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PayrollType, Status, YesNo } from "src/common/enums/all.enum";
 import { BaseEntity } from "src/database/entities/base.entity";
-import { Employee } from "src/employees/entities/employee.entities";
+import { Employee } from "src/employees/entities/employee.entity";
 import { Ledger } from "src/ledgers/entities/ledger.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
@@ -18,7 +18,6 @@ export class Payroll extends BaseEntity {
   @ApiProperty()
   @Column({ type: "enum", enum: PayrollType })
   type: PayrollType;
-
 
   @ApiProperty()
   @Column({ type: 'double' })
@@ -46,11 +45,11 @@ export class Payroll extends BaseEntity {
   @JoinColumn({ name: "ledger_id" })
   ledger: () => Ledger;
 
-  // @ApiProperty()
-  // @ManyToOne(() => Employee, (employee: Employee) => employee.id, {
-  //   onDelete: "CASCADE",
-  //   lazy: true,
-  // })
-  // @JoinColumn({ name: "employee_id" })
-  // employee: () => Employee;
+  @ApiProperty()
+  @ManyToOne(() => Employee, (employee: Employee) => employee.id, {
+    onDelete: "CASCADE",
+    lazy: true,
+  })
+  @JoinColumn({ name: "employee_id" })
+  employee: () => Employee;
 }

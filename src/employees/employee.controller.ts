@@ -13,7 +13,6 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { PStatus } from "src/common/enums/all.enum";
 import { PageRequest } from "src/common/models/page-request.model";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PageDto } from "src/common/models/page.dto";
@@ -22,7 +21,7 @@ import { EmployeeService } from "./service/employee.service";
 import { EmployeePage } from "./dto/employee.response.dto";
 import { EmployeeSearchDto } from "./dto/employee.search.dto";
 import { EmployeeDto } from "./dto/employee.dto";
-import { Employee } from "./entities/employee.entities";
+import { Employee } from "./entities/employee.entity";
 
 @ApiTags("employee")
 @ApiBearerAuth()
@@ -34,6 +33,10 @@ export class EmployeeController {
   @ApiResponse({
     type: EmployeePage,
   })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true
+  }))
   @Get("/")
   getEmployees(
     @Query() employeeSearchDto: EmployeeSearchDto,
@@ -58,9 +61,6 @@ export class EmployeeController {
     return this.employeeService.addEmployee(employeeDto, req.user.userId);
   }
 
-  @ApiResponse({
-    type: Employee,
-  })
   @Get("/:employeeId")
   getEmployeeById(
     @Param("employeeId") employeeId: string
@@ -75,7 +75,7 @@ export class EmployeeController {
     whitelist: true,
     transform: true
   }))
-  @Put("/:employeeId")
+  @Patch("/:employeeId")
   update(
     @Param("employeeId") employeeId: string,
     @Body() employeeDto: EmployeeDto,

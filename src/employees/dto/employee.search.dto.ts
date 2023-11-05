@@ -4,11 +4,12 @@ import { Transform, Type } from "class-transformer";
 import { IsDateInFormat, IsValidEntry } from "src/common/rules";
 import { EmploymentType, Gender } from "src/common/enums/all.enum";
 import { IQueryClause, QueryDto } from "src/common/trait/query.dto";
+import { IsRelational } from "src/common/decorators/dto";
 
 export class EmployeeSearchDto extends QueryDto{
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Name cannot be empty' })
+  @IsOptional()
   name: string;
 
   @ApiProperty({ required: false })
@@ -20,7 +21,13 @@ export class EmployeeSearchDto extends QueryDto{
   type: string;
 
   @ApiProperty({ required: true })
-  @IsOptional({ message: "Ledger code cannot be empty" })
+  @IsOptional()
   ledger_code: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsRelational()
+  ledger: boolean;
 
 }

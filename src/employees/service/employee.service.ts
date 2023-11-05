@@ -9,7 +9,7 @@ import { CommonEntity } from "src/common/trait/entity.trait";
 import { LedgerService } from "src/ledgers/service/ledgers.service";
 import { Repository } from "typeorm";
 import { IPageable } from "src/common/models/pageable.interface";
-import { Employee } from "../entities/employee.entities";
+import { Employee } from "../entities/employee.entity";
 import { EmployeeSearchDto } from "../dto/employee.search.dto";
 import { EmployeeDto } from "../dto/employee.dto";
 import { LedgerDto } from "src/ledgers/dto/ledger.dto";
@@ -39,7 +39,8 @@ export class EmployeeService extends CommonEntity<Employee> {
   async getEmployeeById(
     employeeId: string
   ): Promise<Employee> {
-    return await this.employeeRepository.findOneOrFail({ where: { id: employeeId } })
+    const emp = await this.employeeRepository.findOne({ relations: { ledger: true }, where: { id: employeeId } })
+    return emp
   }
 
   async addEmployee(employeeDto: EmployeeDto, userId: string): Promise<Employee> {
@@ -69,6 +70,7 @@ export class EmployeeService extends CommonEntity<Employee> {
       ...employeeModal,
       ...employeeDto
     });
+    console.log(employee,employeeDto)
     return await this.employeeRepository.save(employee);
   }
 }

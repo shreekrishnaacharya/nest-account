@@ -25,7 +25,7 @@ export class LedgerGroupService extends CommonEntity<LedgerGroup> {
   ): Promise<LedgerGroup> {
     const ledgerGroup = this.ledgerGroupRepository.create({
       name: ledgerGroupDto.name,
-      // bs_head: ledgerGroupDto.bs_head,
+      bs_head: ledgerGroupDto.bs_head,
       user_id: userId,
     });
     return await this.ledgerGroupRepository.save(ledgerGroup);

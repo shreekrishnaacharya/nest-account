@@ -8,13 +8,17 @@ export enum Gender {
 export enum EmploymentType {
   CONTRACT = "Contract",
   TEMPORARY = "Temporary",
-  PERMANENT = "Permanent"
+  FULL_TIME = "Full Time"
 }
-
 
 export enum Status {
   ACTIVE = "Active",
   INACTIVE = "Inactive",
+}
+
+export enum MarriedStatus {
+  MARRIED = "Married",
+  UNMARRIED = "Unmarried",
 }
 
 export enum AccountSide {
