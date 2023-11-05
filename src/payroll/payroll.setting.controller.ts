@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -22,11 +23,12 @@ import { PayrollSettingService } from "./service/payroll.setting.service";
 import { PayrollSetting } from "./entities/payroll.setting.entity";
 import { PayrollSettingPage } from "./dto/payroll.setting.response.dto";
 import { PayrollSettingDto } from "./dto/payroll.setting.dto";
+import { PayrollSettingSearchDto } from "./dto/payroll.setting.search.dto";
 
-@ApiTags("payroll")
+@ApiTags("payroll-setting")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("payroll")
+@Controller("payroll-setting")
 export class PayrollSettingController {
   constructor(private payrollService: PayrollSettingService) { }
 
@@ -39,23 +41,30 @@ export class PayrollSettingController {
   }))
   @Get("/")
   getPayrollSetting(
+    @Query() payrollSearchDto: PayrollSettingSearchDto,
     @Query() pageDto: PageDto
   ): Promise<Page<PayrollSetting>> {
     const pageable: IPageable = PageRequest.from(pageDto);
-    return this.payrollService.findAllByPage(pageable);
+    return this.payrollService.findAllByPage(pageable, payrollSearchDto);
   }
 
   @Post("/")
   addPayrollSetting(
-    @Body() payrollDto: PayrollSettingDto): ResponseMessage {
-    this.payrollService.createSetting(payrollDto);
-    return {
-      status: ResponseStatus.SUCCESS,
-      message: "Payroll setting added successfully"
-    }
+    @Body() payrollDto: PayrollSettingDto): Promise<PayrollSetting> {
+    return this.payrollService.createSetting(payrollDto);
+    // return {
+    //   status: ResponseStatus.SUCCESS,
+    //   message: "Payroll setting added successfully"
+    // }
   }
 
-  @Put("/")
+  @Get("/:id")
+  getPayroll(
+    @Param("id") id: string): Promise<PayrollSetting> {
+    return this.payrollService.getOnePayrollSetting(id);
+  }
+
+  @Patch("/:id")
   updatePayroll(
     @Param("id") id: string,
     @Body() payrollDto: PayrollSettingDto): ResponseMessage {

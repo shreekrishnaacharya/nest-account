@@ -11,6 +11,11 @@ export class PayrollDto {
   @IsNotEmpty()
   ledger_id: string;
 
+  @ApiProperty({ type: "enum", enum: PayrollType })
+  @IsString()
+  @IsNotEmpty()
+  type: PayrollType;
+
   @ApiProperty()
   amount: number;
 

@@ -11,13 +11,13 @@ export class PayrollSetting extends BaseEntity {
   ledger_id: string;
 
   @ApiProperty()
-  @Column({ type: 'double' })
+  @Column({ type: 'double', default: null, nullable: true })
   max_amount: number;
+
 
   @ApiProperty()
   @ManyToOne(() => Ledger, (ledger: Ledger) => ledger.id, {
     onDelete: "CASCADE",
-    lazy: true,
   })
   @JoinColumn({ name: "ledger_id" })
   ledger: () => Ledger;

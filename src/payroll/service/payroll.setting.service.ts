@@ -13,7 +13,7 @@ import { PayrollSettingDto } from "../dto/payroll.setting.dto";
 @Injectable()
 export class PayrollSettingService extends CommonEntity<PayrollSetting> {
   constructor(
-    @InjectRepository(Payroll)
+    @InjectRepository(PayrollSetting)
     private payrollRepository: Repository<PayrollSetting>,
   ) {
     super(payrollRepository);
@@ -27,17 +27,27 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
     });
     return invoices;
   }
+
+  async getOnePayrollSetting(id: string): Promise<PayrollSetting> {
+    return await this.payrollRepository.findOne({
+      where: {
+        id
+      },
+    });
+  }
   async createSetting(
     payrollDto: PayrollSettingDto,
   ): Promise<PayrollSetting> {
+    console.log(payrollDto)
     const {
       ledger_id,
       max_amount
     } = payrollDto;
     const payrollModel = this.payrollRepository.create({
       ledger_id,
-      max_amount,
+      max_amount
     })
+    console.log(payrollModel)
     return await this.payrollRepository.save(payrollModel);
   }
 

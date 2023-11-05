@@ -7,18 +7,21 @@ import { VoucherModule } from "src/voucher/voucher.module";
 import { Payroll } from "./entities/payroll.entity";
 import { PayrollController } from "./payroll.controller";
 import { PayrollService } from "./service/payroll.service";
+import { PayrollSettingController } from "./payroll.setting.controller";
+import { PayrollSetting } from "./entities/payroll.setting.entity";
+import { PayrollSettingService } from "./service/payroll.setting.service";
 
 const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Payroll]),
+    TypeOrmModule.forFeature([Payroll, PayrollSetting]),
     forwardRef(() => AuthenticationModule),
     forwardRef(() => VoucherModule),
     passportModule,
   ],
-  controllers: [PayrollController],
-  providers: [PayrollService],
+  controllers: [PayrollController, PayrollSettingController],
+  providers: [PayrollService, PayrollSettingService],
   exports: [PayrollService],
 })
 export class PayrollModule { }

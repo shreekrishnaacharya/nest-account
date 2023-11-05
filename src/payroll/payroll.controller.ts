@@ -25,6 +25,7 @@ import { PayrollSearchDto } from "./dto/payroll.search.dto";
 import { Page } from "src/common/models/page.model";
 import { IPageable } from "src/common/models/pageable.interface";
 import { PageRequest } from "src/common/models/page-request.model";
+import { PayrollCreateDto } from "./dto/payroll.create.dto";
 
 @ApiTags("payroll")
 @ApiBearerAuth()
@@ -55,19 +56,21 @@ export class PayrollController {
   @Post("/:employeeId")
   addPayroll(
     @Param("employeeId") employeeId: string,
-    @Body() payrollDto: PayrollDto[]): ResponseMessage {
-    this.payrollService.createPayroll(payrollDto, employeeId, PayrollType.PLUS);
+    @Body() payrollDto: PayrollCreateDto): ResponseMessage {
+      console.log(payrollDto)
+    this.payrollService.createPayroll(payrollDto, employeeId);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Payroll added successfully"
     }
   }
 
-  @Put("/:employeeId")
+  @Put("/:payrollId/:employeeId")
   updatePayroll(
+    @Param("payrollId") payrollId: string,
     @Param("employeeId") employeeId: string,
-    @Body() payrollDto: PayrollDto[]): ResponseMessage {
-    this.payrollService.updatePayroll(payrollDto, employeeId, PayrollType.PLUS);
+    @Body() payrollDto: PayrollDto): ResponseMessage {
+    this.payrollService.updatePayroll(payrollId, payrollDto, employeeId);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Payroll added successfully"

@@ -7,6 +7,7 @@ import { Payroll } from "../entities/payroll.entity";
 import { PayrollDto } from "../dto/payroll.dto";
 import { PayrollType } from "src/common/enums/all.enum";
 import { CommonEntity } from "src/common/trait/entity.trait";
+import { PayrollCreateDto } from "../dto/payroll.create.dto";
 
 @Injectable()
 export class PayrollService extends CommonEntity<Payroll> {
@@ -18,20 +19,20 @@ export class PayrollService extends CommonEntity<Payroll> {
     super(payrollRepository);
   }
   async createPayroll(
-    payrollDtos: PayrollDto[],
-    employeeId: string,
-    payrollType: PayrollType
+    payrollDtos: PayrollCreateDto,
+    employeeId: string
   ) {
-    payrollDtos.forEach(payrollDto => {
+    payrollDtos.payroll.forEach(payrollDto => {
       const {
         ledger_id,
-        amount
+        amount,
+        type
       } = payrollDto;
       const payrollModel = this.payrollRepository.create({
         employee_id: employeeId,
         ledger_id,
         amount,
-        type: payrollType
+        type
       })
       this.payrollRepository.save(payrollModel);
     })
@@ -39,27 +40,25 @@ export class PayrollService extends CommonEntity<Payroll> {
   }
 
   async updatePayroll(
-    payrollDtos: PayrollDto[],
-    employeeId: string,
-    payrollType: PayrollType
+    payrollId: string,
+    payrollDto: PayrollDto,
+    employeeId: string
   ) {
-    this.payrollRepository.find({
+    await this.payrollRepository.findOneOrFail({
       where: { id: employeeId }
     })
-    payrollDtos.forEach(payrollDto => {
-      const {
-        ledger_id,
-        amount
-      } = payrollDto;
-      const payrollModel = this.payrollRepository.create({
-        employee_id: employeeId,
-        ledger_id,
-        amount,
-        type: payrollType
-      })
-      this.payrollRepository.save(payrollModel);
+    const {
+      ledger_id,
+      amount,
+      type
+    } = payrollDto;
+    const payrollModel = this.payrollRepository.create({
+      employee_id: employeeId,
+      ledger_id,
+      amount,
+      type
     })
-    //do bulk save operation here
+    this.payrollRepository.update(payrollId, payrollModel);
   }
   async getPayroll(employeeId: string): Promise<Payroll[]> {
     const invoices = await this.payrollRepository.find({
