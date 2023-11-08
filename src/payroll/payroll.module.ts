@@ -10,18 +10,24 @@ import { PayrollService } from "./service/payroll.service";
 import { PayrollSettingController } from "./payroll.setting.controller";
 import { PayrollSetting } from "./entities/payroll.setting.entity";
 import { PayrollSettingService } from "./service/payroll.setting.service";
+import { AnnualDeductionController } from "./annual.deduction.controller";
+import { AnnualDeduction } from "./entities/annual.deduction";
+import { AnnualDeductionService } from "./service/annual.deduction.service";
+import { LedgersModule } from "src/ledgers/ledgers.module";
 
 const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Payroll, PayrollSetting]),
+    TypeOrmModule.forFeature([Payroll, PayrollSetting,AnnualDeduction]),
     forwardRef(() => AuthenticationModule),
     forwardRef(() => VoucherModule),
+    forwardRef(() => LedgersModule),
+    
     passportModule,
   ],
-  controllers: [PayrollController, PayrollSettingController],
-  providers: [PayrollService, PayrollSettingService],
+  controllers: [PayrollController, PayrollSettingController,AnnualDeductionController],
+  providers: [PayrollService, PayrollSettingService,AnnualDeductionService],
   exports: [PayrollService],
 })
 export class PayrollModule { }

@@ -10,6 +10,7 @@ export enum LedgerTypes {
   CASH = "cash",
   SALARY = "salary",
   SALES = "sales",
+  PAYROLL_ANNUAL_DEDUCTION = "payroll annual deduction",
   INCOME_TAX = "income tax",
   SOCIAL_SECURITY_FUND = "s.s. fund",
   BONUS = "bonus",

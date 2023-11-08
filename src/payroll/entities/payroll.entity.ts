@@ -40,7 +40,6 @@ export class Payroll extends BaseEntity {
   @ApiProperty()
   @ManyToOne(() => Ledger, (ledger: Ledger) => ledger.id, {
     onDelete: "CASCADE",
-    lazy: true,
   })
   @JoinColumn({ name: "ledger_id" })
   ledger: () => Ledger;

@@ -39,13 +39,21 @@ export class PayrollService extends CommonEntity<Payroll> {
     //do bulk save operation here
   }
 
+  async getOnePayroll(
+    payrollId: string
+  ) {
+    return await this.payrollRepository.findOneOrFail({
+      where: { id: payrollId }
+    })
+  }
+  
   async updatePayroll(
     payrollId: string,
     payrollDto: PayrollDto,
     employeeId: string
   ) {
     await this.payrollRepository.findOneOrFail({
-      where: { id: employeeId }
+      where: { employee_id: employeeId }
     })
     const {
       ledger_id,
@@ -59,6 +67,12 @@ export class PayrollService extends CommonEntity<Payroll> {
       type
     })
     this.payrollRepository.update(payrollId, payrollModel);
+  }
+
+  async deletePayroll(
+    payrollId: string,
+  ) {
+    await this.payrollRepository.delete(payrollId)
   }
   async getPayroll(employeeId: string): Promise<Payroll[]> {
     const invoices = await this.payrollRepository.find({

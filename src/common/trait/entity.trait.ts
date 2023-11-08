@@ -10,15 +10,21 @@ import { Page } from "../models/page.model";
 import { IPageable } from "../models/pageable.interface";
 import { IQueryClause, IQueryDto } from "./query.dto";
 
+interface CustomQuery {
+  [key: string]: string
+}
+
 export class CommonEntity<T> {
   constructor(private readonly _currentRepo: Repository<T>) { }
   public async findAllByPage(
     pageable: IPageable,
-    queryDto?: IQueryDto
+    queryDto?: IQueryDto,
+    customQuery?: IQueryClause[]
   ): Promise<Page<T>> {
     let whereCondition = null;
     let whereRaw = [];
     const sort: { [key: string]: string } = pageable.getSort()?.asKeyValue();
+    whereRaw = this._buildWhereConditions(customQuery, whereRaw, "AND")
     whereRaw = this._buildWhereConditions(queryDto?.getAndQuery(), whereRaw, "AND")
     whereRaw = this._buildWhereConditions(queryDto?.getOrQuery(), whereRaw, "OR")
 

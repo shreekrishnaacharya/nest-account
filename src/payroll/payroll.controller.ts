@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -57,7 +59,7 @@ export class PayrollController {
   addPayroll(
     @Param("employeeId") employeeId: string,
     @Body() payrollDto: PayrollCreateDto): ResponseMessage {
-      console.log(payrollDto)
+    console.log(payrollDto)
     this.payrollService.createPayroll(payrollDto, employeeId);
     return {
       status: ResponseStatus.SUCCESS,
@@ -65,7 +67,14 @@ export class PayrollController {
     }
   }
 
-  @Put("/:payrollId/:employeeId")
+
+  @Get("/:employeeId/:payrollId")
+  getOnePayroll(
+    @Param("payrollId") payrollId: string): Promise<Payroll> {
+    return this.payrollService.getOnePayroll(payrollId);
+  }
+
+  @Patch ("/:employeeId/:payrollId")
   updatePayroll(
     @Param("payrollId") payrollId: string,
     @Param("employeeId") employeeId: string,
@@ -77,5 +86,15 @@ export class PayrollController {
     }
   }
 
+  @Delete("/:employeeId/:payrollId")
+  deletePayroll(
+    @Param("payrollId") payrollId: string): ResponseMessage {
+    console.log(payrollId)
+    this.payrollService.deletePayroll(payrollId);
+    return {
+      status: ResponseStatus.SUCCESS,
+      message: "Payroll deleted successfully"
+    }
+  }
 
 }

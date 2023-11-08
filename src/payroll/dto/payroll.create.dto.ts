@@ -8,7 +8,7 @@ import { Type } from "class-transformer";
 export class PayrollCreateDto {
   @ApiProperty({ type: [PayrollDto] })
   @ValidateNested({ each: true })
-  @Type(() => PayrollDto)
+  // @Type(() => PayrollDto)
   payroll: PayrollDto[];
 
 }

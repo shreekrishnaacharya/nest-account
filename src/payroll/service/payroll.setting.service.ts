@@ -1,20 +1,19 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { VoucherEntryDto } from "src/voucher/dto/voucher.entry.dto";
-import { VoucherService } from "src/voucher/service/voucher.service";
 import { Repository } from "typeorm";
-import { Payroll } from "../entities/payroll.entity";
-import { PayrollDto } from "../dto/payroll.dto";
-import { PayrollType } from "src/common/enums/all.enum";
 import { CommonEntity } from "src/common/trait/entity.trait";
 import { PayrollSetting } from "../entities/payroll.setting.entity";
 import { PayrollSettingDto } from "../dto/payroll.setting.dto";
+import { LedgerService } from "src/ledgers/service/ledgers.service";
+import { LedgerTypes } from "src/common/enums/ledger.group";
 
 @Injectable()
 export class PayrollSettingService extends CommonEntity<PayrollSetting> {
   constructor(
     @InjectRepository(PayrollSetting)
     private payrollRepository: Repository<PayrollSetting>,
+    @Inject(forwardRef(() => LedgerService))
+    private ledgerService: LedgerService,
   ) {
     super(payrollRepository);
   }
@@ -35,6 +34,7 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
       },
     });
   }
+
   async createSetting(
     payrollDto: PayrollSettingDto,
   ): Promise<PayrollSetting> {
@@ -47,7 +47,8 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
       ledger_id,
       max_amount
     })
-    console.log(payrollModel)
+    const ledgerDto: any = { type: LedgerTypes.PAYROLL_ANNUAL_DEDUCTION };
+    this.ledgerService.updateLedger(ledger_id, ledgerDto)
     return await this.payrollRepository.save(payrollModel);
   }
 
@@ -67,6 +68,18 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
       max_amount
     })
     await this.payrollRepository.update(id, payrollModel)
+  }
+
+  async deletePayroll(
+    id: string,
+  ) {
+    // const settingPay = await this.payrollRepository.findOne({
+    //   where: { id }
+    // })
+    await this.payrollRepository.delete(id)
+    // const ledgerDto: any = { type: LedgerTypes.PAYROLL_ANNUAL_DEDUCTION };
+    // this.ledgerService.updateLedger(settingPay.ledger_id, ledgerDto)
+    return true;
   }
 
 
