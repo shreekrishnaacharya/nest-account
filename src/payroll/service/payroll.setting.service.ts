@@ -52,7 +52,7 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
     return await this.payrollRepository.save(payrollModel);
   }
 
-  async updatePayroll(
+  async updateSetting(
     payrollDto: PayrollSettingDto,
     id: string,
   ) {

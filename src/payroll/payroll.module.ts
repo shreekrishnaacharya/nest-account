@@ -11,7 +11,7 @@ import { PayrollSettingController } from "./payroll.setting.controller";
 import { PayrollSetting } from "./entities/payroll.setting.entity";
 import { PayrollSettingService } from "./service/payroll.setting.service";
 import { AnnualDeductionController } from "./annual.deduction.controller";
-import { AnnualDeduction } from "./entities/annual.deduction";
+import { AnnualDeduction } from "./entities/annual.deduction.entity";
 import { AnnualDeductionService } from "./service/annual.deduction.service";
 import { LedgersModule } from "src/ledgers/ledgers.module";
 

@@ -82,7 +82,7 @@ export class PayrollSettingController {
   updatePayroll(
     @Param("id") id: string,
     @Body() payrollDto: PayrollSettingDto): ResponseMessage {
-    this.payrollService.updatePayroll(payrollDto, id);
+    this.payrollService.updateSetting(payrollDto, id);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Payroll setting added successfully"

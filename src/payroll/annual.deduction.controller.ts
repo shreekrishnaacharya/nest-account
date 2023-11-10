@@ -22,7 +22,7 @@ import { PageRequest } from "src/common/models/page-request.model";
 import { AnnualDeductionService } from "./service/annual.deduction.service";
 import { AnnualDeductionPage } from "./dto/annual.deduction.response.dto";
 import { AnnualDeductionDto } from "./dto/annual.deduction.dto";
-import { AnnualDeduction } from "./entities/annual.deduction";
+import { AnnualDeduction } from "./entities/annual.deduction.entity";
 import { AnnualDeductionSearchDto } from "./dto/annual.deduction.search.dto";
 import { IQueryClause } from "src/common/trait/query.dto";
 
@@ -63,14 +63,14 @@ export class AnnualDeductionController {
     transform: true
   }))
   @Post("/:employeeId")
-  addAnnualDeduction(
+  async addAnnualDeduction(
     @Param("employeeId") employeeId: string,
-    @Body() payrollDto: AnnualDeductionDto): Promise<AnnualDeduction> {
-    return this.annualDeductionService.createSetting(payrollDto);
-    // return {
-    //   status: ResponseStatus.SUCCESS,
-    //   message: "Payroll setting added successfully"
-    // }
+    @Body() payrollDto: AnnualDeductionDto): Promise<ResponseMessage> {
+    await this.annualDeductionService.createDeduction(employeeId, payrollDto);
+    return {
+      status: ResponseStatus.SUCCESS,
+      message: "Payroll setting added successfully"
+    }
   }
 
   @Get("/:id")
@@ -87,10 +87,10 @@ export class AnnualDeductionController {
     transform: true
   }))
   @Patch("/:id")
-  updatePayroll(
+  updateDeduction(
     @Param("id") id: string,
     @Body() annualDeductionDtoDto: AnnualDeductionDto): ResponseMessage {
-    this.annualDeductionService.updatePayroll(annualDeductionDtoDto, id);
+    this.annualDeductionService.updateDeduction(annualDeductionDtoDto, id);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Annual deduction added successfully"
