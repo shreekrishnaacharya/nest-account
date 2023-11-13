@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -89,5 +90,20 @@ export class PayrollSettingController {
     }
   }
 
+  @Delete("/:id")
+  deletePayroll(
+    @Param("id") id: string): ResponseMessage {
+    if (this.payrollService.deletePayroll(id)) {
+      return {
+        status: ResponseStatus.SUCCESS,
+        message: "Payroll setting deleted successfully"
+      }
+    } else {
+      return {
+        status: ResponseStatus.ERROR,
+        message: "Payroll setting delete failed"
+      }
+    }
+  }
 
 }

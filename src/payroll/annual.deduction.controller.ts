@@ -25,6 +25,7 @@ import { AnnualDeductionDto } from "./dto/annual.deduction.dto";
 import { AnnualDeduction } from "./entities/annual.deduction.entity";
 import { AnnualDeductionSearchDto } from "./dto/annual.deduction.search.dto";
 import { IQueryClause } from "src/common/trait/query.dto";
+import { AnnualDeductionCreateDto } from "./dto/annual.deduction.create.dto";
 
 @ApiTags("annual-deduction")
 @ApiBearerAuth()
@@ -33,26 +34,33 @@ import { IQueryClause } from "src/common/trait/query.dto";
 export class AnnualDeductionController {
   constructor(private annualDeductionService: AnnualDeductionService) { }
 
-  @ApiResponse({
-    type: AnnualDeductionPage,
-  })
-  @UsePipes(new ValidationPipe({
-    whitelist: true,
-    transform: true
-  }))
+  // @ApiResponse({
+  //   type: AnnualDeductionPage,
+  // })
+  // @UsePipes(new ValidationPipe({
+  //   whitelist: true,
+  //   transform: true
+  // }))
+  // @Get("/:employeeId")
+  // getAnnualDeduction(
+  //   @Param("employeeId") employeeId: string,
+  //   @Query() annualDeductionDto: AnnualDeductionSearchDto,
+  //   @Query() pageDto: PageDto
+  // ): Promise<Page<AnnualDeduction>> {
+  //   const pageable: IPageable = PageRequest.from(pageDto);
+  //   const condition: IQueryClause = {
+  //     key: "employee_id",
+  //     value: employeeId,
+  //     clause: "AND"
+  //   }
+  //   return this.annualDeductionService.findAllByPage(pageable, annualDeductionDto, [condition]);
+  // }
+
   @Get("/:employeeId")
-  getAnnualDeduction(
+  getAllAnnualDeduction(
     @Param("employeeId") employeeId: string,
-    @Query() annualDeductionDto: AnnualDeductionSearchDto,
-    @Query() pageDto: PageDto
-  ): Promise<Page<AnnualDeduction>> {
-    const pageable: IPageable = PageRequest.from(pageDto);
-    const condition: IQueryClause = {
-      key: "employee_id",
-      value: employeeId,
-      clause: "AND"
-    }
-    return this.annualDeductionService.findAllByPage(pageable, annualDeductionDto, [condition]);
+  ): Promise<AnnualDeduction[]> {
+    return this.annualDeductionService.getAnnualDeduction(employeeId);
   }
 
   @ApiResponse({
@@ -82,15 +90,12 @@ export class AnnualDeductionController {
   @ApiResponse({
     type: AnnualDeductionDto,
   })
-  @UsePipes(new ValidationPipe({
-    whitelist: true,
-    transform: true
-  }))
-  @Patch("/:id")
-  updateDeduction(
-    @Param("id") id: string,
-    @Body() annualDeductionDtoDto: AnnualDeductionDto): ResponseMessage {
-    this.annualDeductionService.updateDeduction(annualDeductionDtoDto, id);
+  @Patch("/:employeeId")
+  async updateDeduction(
+    @Param("employeeId") employeeId: string,
+    @Body() annualDeductionDtoDto: AnnualDeductionCreateDto): Promise<ResponseMessage> {
+      console.log(annualDeductionDtoDto)
+    await this.annualDeductionService.updateAllDeduction(annualDeductionDtoDto, employeeId);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Annual deduction added successfully"

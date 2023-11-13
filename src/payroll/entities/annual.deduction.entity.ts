@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BaseEntity } from "src/database/entities/base.entity";
-import { Column, Entity } from "typeorm";
+import { Ledger } from "src/ledgers/entities/ledger.entity";
+import { Column, Entity, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity()
 export class AnnualDeduction extends BaseEntity {
@@ -20,4 +21,11 @@ export class AnnualDeduction extends BaseEntity {
     @Column({ type: "double" })
     amount: number;
 
+
+    @ApiProperty()
+    @ManyToOne(() => Ledger, (ledger: Ledger) => ledger.id, {
+        onDelete: "CASCADE",
+    })
+    @JoinColumn({ name: "ledger_id" })
+    ledger: Ledger;
 }

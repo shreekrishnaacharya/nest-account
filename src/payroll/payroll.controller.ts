@@ -18,7 +18,6 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PayrollService } from "./service/payroll.service";
 import { Payroll } from "./entities/payroll.entity";
 import { PayrollDto } from "./dto/payroll.dto";
-import { PayrollType } from "src/common/enums/all.enum";
 import { ResponseMessage } from "src/common/models/response-message.model";
 import { ResponseStatus } from "src/common/enums/response-status.enum";
 import { PayrollPage } from "./dto/payroll.response.dto";
@@ -35,7 +34,6 @@ import { PayrollCreateDto } from "./dto/payroll.create.dto";
 @Controller("payroll")
 export class PayrollController {
   constructor(private payrollService: PayrollService) { }
-
 
   @ApiResponse({
     type: PayrollPage,
@@ -59,14 +57,13 @@ export class PayrollController {
   addPayroll(
     @Param("employeeId") employeeId: string,
     @Body() payrollDto: PayrollCreateDto): ResponseMessage {
-    console.log(payrollDto)
+    // console.log(payrollDto)
     this.payrollService.createPayroll(payrollDto, employeeId);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Payroll added successfully"
     }
   }
-
 
   @Get("/:employeeId/:payrollId")
   getOnePayroll(

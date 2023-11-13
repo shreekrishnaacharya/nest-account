@@ -34,6 +34,7 @@ export class PayrollSearchDto  extends QueryDto{
   type: PayrollType;
 
   @ApiProperty({ required: false })
+  @Type(() => Number)
   @IsOptional()
   amount: number;
 

@@ -8,6 +8,7 @@ import { PayrollDto } from "../dto/payroll.dto";
 import { PayrollType } from "src/common/enums/all.enum";
 import { CommonEntity } from "src/common/trait/entity.trait";
 import { PayrollCreateDto } from "../dto/payroll.create.dto";
+import { Generator } from "src/common/helpers/id.generator";
 
 @Injectable()
 export class PayrollService extends CommonEntity<Payroll> {
@@ -22,21 +23,24 @@ export class PayrollService extends CommonEntity<Payroll> {
     payrollDtos: PayrollCreateDto,
     employeeId: string
   ) {
+    let payrollModel = {}
     payrollDtos.payroll.forEach(payrollDto => {
       const {
         ledger_id,
         amount,
         type
       } = payrollDto;
-      const payrollModel = this.payrollRepository.create({
+
+      payrollModel[ledger_id] = this.payrollRepository.create({
+        id: Generator.getId(),
         employee_id: employeeId,
         ledger_id,
         amount,
         type
       })
-      this.payrollRepository.save(payrollModel);
+
     })
-    //do bulk save operation here
+    this.payrollRepository.insert(payrollModel);
   }
 
   async getOnePayroll(
@@ -46,7 +50,7 @@ export class PayrollService extends CommonEntity<Payroll> {
       where: { id: payrollId }
     })
   }
-  
+
   async updatePayroll(
     payrollId: string,
     payrollDto: PayrollDto,

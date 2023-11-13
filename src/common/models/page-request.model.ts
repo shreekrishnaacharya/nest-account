@@ -12,7 +12,7 @@ export class PageRequest implements IPageable {
 
   constructor(
     skip: number = 0,
-    take: number = 10,
+    take: number = 100,
     sort: ISortable = new Sort()
   ) {
     this.skip = skip;

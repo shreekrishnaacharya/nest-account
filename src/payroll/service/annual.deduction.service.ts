@@ -7,6 +7,12 @@ import { AnnualDeductionDto } from "../dto/annual.deduction.dto";
 import { PayrollService } from "./payroll.service";
 import { PayrollSetting } from "../entities/payroll.setting.entity";
 import { PayrollSettingService } from "./payroll.setting.service";
+import { Page } from "src/common/models/page.model";
+import { IPageable } from "src/common/models/pageable.interface";
+import { PageRequest } from "src/common/models/page-request.model";
+import { IQueryClause } from "src/common/trait/query.dto";
+import { AnnualDeductionCreateDto } from "../dto/annual.deduction.create.dto";
+import { Generator } from "src/common/helpers/id.generator";
 
 @Injectable()
 export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
@@ -21,13 +27,14 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
 
   async getAnnualDeduction(employeeId: string): Promise<AnnualDeduction[]> {
     const paySetting = await this.payrollSettingService.getPayrollSetting();
-
     const deduction = await this.deductionRepository.find({
+      relations: { ledger: true },
       where: { employee_id: employeeId },
       order: {
         createdAt: "DESC",
       },
     });
+
     const deductList = {};
     deduction.forEach(element => {
       deductList[element.ledger_id] = element;
@@ -39,7 +46,8 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
       return this.deductionRepository.create({
         ledger_id: e.ledger_id,
         amount: 0,
-        employee_id: employeeId
+        employee_id: employeeId,
+        ledger: e.ledger
       })
     })
   }
@@ -86,5 +94,32 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
     await this.deductionRepository.update(id, payrollModel)
   }
 
+  async updateAllDeduction(
+    annualDeductionDto: AnnualDeductionCreateDto,
+    employeeId: string,
+  ) {
+    const payrollModel = annualDeductionDto.annualDeduction.map(e => {
+      return this.deductionRepository.create({
+        id: Generator.getId(),
+        ledger_id: e.ledger_id,
+        amount: e.amount,
+        employee_id: employeeId
+      })
+    })
+    await this.deleteAllByEmployeeId(employeeId);
+    await this.deductionRepository.insert(payrollModel)
+  }
+
+  async deleteAllByEmployeeId(
+    employeeId: string
+  ) {
+    await this.deductionRepository.delete({ employee_id: employeeId });
+  }
+
+  async deleteAllByLedgerId(
+    ledgerId: string
+  ) {
+    await this.deductionRepository.delete({ ledger_id: ledgerId });
+  }
 
 }

@@ -6,6 +6,7 @@ import { PayrollSetting } from "../entities/payroll.setting.entity";
 import { PayrollSettingDto } from "../dto/payroll.setting.dto";
 import { LedgerService } from "src/ledgers/service/ledgers.service";
 import { LedgerTypes } from "src/common/enums/ledger.group";
+import { AnnualDeductionService } from "./annual.deduction.service";
 
 @Injectable()
 export class PayrollSettingService extends CommonEntity<PayrollSetting> {
@@ -14,12 +15,15 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
     private payrollRepository: Repository<PayrollSetting>,
     @Inject(forwardRef(() => LedgerService))
     private ledgerService: LedgerService,
+    @Inject(forwardRef(() => AnnualDeductionService))
+    private annualDeductionService: AnnualDeductionService,
   ) {
     super(payrollRepository);
   }
 
   async getPayrollSetting(): Promise<PayrollSetting[]> {
     const invoices = await this.payrollRepository.find({
+      relations: { ledger: true },
       order: {
         createdAt: "DESC",
       },
@@ -73,12 +77,11 @@ export class PayrollSettingService extends CommonEntity<PayrollSetting> {
   async deletePayroll(
     id: string,
   ) {
-    // const settingPay = await this.payrollRepository.findOne({
-    //   where: { id }
-    // })
+    const settingPay = await this.payrollRepository.findOne({
+      where: { id }
+    })
+    await this.annualDeductionService.deleteAllByLedgerId(settingPay.ledger_id)
     await this.payrollRepository.delete(id)
-    // const ledgerDto: any = { type: LedgerTypes.PAYROLL_ANNUAL_DEDUCTION };
-    // this.ledgerService.updateLedger(settingPay.ledger_id, ledgerDto)
     return true;
   }
 

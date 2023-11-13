@@ -20,6 +20,6 @@ export class PayrollSetting extends BaseEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "ledger_id" })
-  ledger: () => Ledger;
+  ledger: Ledger;
 
 }

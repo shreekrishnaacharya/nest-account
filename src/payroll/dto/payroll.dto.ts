@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsNotEmpty,
   IsString,
@@ -17,6 +18,7 @@ export class PayrollDto {
   type: PayrollType;
 
   @ApiProperty()
+  @Type(() => Number)
   amount: number;
 
 }

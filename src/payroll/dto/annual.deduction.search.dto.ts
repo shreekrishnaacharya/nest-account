@@ -19,6 +19,7 @@ export class AnnualDeductionSearchDto extends QueryDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
+  @Type(() => Number)
   amount: number;
 
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsNotEmpty,
   IsString,
@@ -12,8 +13,8 @@ export class AnnualDeductionDto {
   ledger_id: string;
 
   @ApiProperty()
-  @IsString()
   @IsNotEmpty()
+  @Type(() => Number)
   amount: number;
 
 }

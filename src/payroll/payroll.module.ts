@@ -19,15 +19,14 @@ const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Payroll, PayrollSetting,AnnualDeduction]),
+    TypeOrmModule.forFeature([Payroll, PayrollSetting, AnnualDeduction]),
     forwardRef(() => AuthenticationModule),
     forwardRef(() => VoucherModule),
     forwardRef(() => LedgersModule),
-    
     passportModule,
   ],
-  controllers: [PayrollController, PayrollSettingController,AnnualDeductionController],
-  providers: [PayrollService, PayrollSettingService,AnnualDeductionService],
+  controllers: [PayrollController, PayrollSettingController, AnnualDeductionController],
+  providers: [PayrollService, PayrollSettingService, AnnualDeductionService],
   exports: [PayrollService],
 })
 export class PayrollModule { }
