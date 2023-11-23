@@ -82,6 +82,14 @@ export class Employee extends BaseEntity {
     @Column({ type: "enum", enum: MarriedStatus, default: MarriedStatus.UNMARRIED })
     married: MarriedStatus;
 
+    @ApiProperty()
+    @Column({ default: 0 })
+    amount_plus: number;
+
+    @ApiProperty()
+    @Column({ default: 0 })
+    amount_minus: number;
+
     @ManyToOne(() => Ledger, (ledger) => ledger.id, {
         onDelete: "CASCADE",
     })

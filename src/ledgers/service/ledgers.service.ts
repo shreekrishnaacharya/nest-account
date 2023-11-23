@@ -26,6 +26,7 @@ export class LedgerService extends CommonEntity<Ledger> {
       ...ledgerDto,
       user_id: userId,
     });
+    console.log(ledger)
     return await this.ledgerRepository.save(ledger);
   }
 
@@ -76,10 +77,11 @@ export class LedgerService extends CommonEntity<Ledger> {
   }
 
   private updateLedgerProperties(ledgerToUpdate: Ledger, ledgerDto: LedgerDto) {
-    const { name, ledger_group_id, code } = ledgerDto;
+    const { name, ledger_group_id, code, type } = ledgerDto;
     ledgerToUpdate.name = name;
     ledgerToUpdate.ledger_group_id = ledger_group_id;
     ledgerToUpdate.code = code;
+    ledgerToUpdate.type = type
   }
 
 

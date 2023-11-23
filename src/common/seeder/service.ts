@@ -16,10 +16,10 @@ export class SeederService {
     async seed() {
         console.log({ ...EmployeeSeed() })
         for (let i = 0; i < 100; i++) {
-            // const entity1 = await this.ledgerGroupRepo.addGroup(LedgerGroupSeed(), "jdu0bmIKzYca");
-            // for (let j = 0; j < 5; j++) {
-            //     await this.ledgerRepo.addLedger({ ...LedgerSeed(), ledger_group_id: entity1.id }, "jdu0bmIKzYca");
-            // }
+            const entity1 = await this.ledgerGroupRepo.addGroup(LedgerGroupSeed(), "jdu0bmIKzYca");
+            for (let j = 0; j < 5; j++) {
+                await this.ledgerRepo.addLedger({ ...LedgerSeed(), ledger_group_id: entity1.id }, "jdu0bmIKzYca");
+            }
 
             await this.employeeService.addEmployee({ ...EmployeeSeed() }, "jdu0bmIKzYca")
         }

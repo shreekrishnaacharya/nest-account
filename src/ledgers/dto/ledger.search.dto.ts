@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import { IsBoolean, IsOptional, IsString } from "class-validator";
 import { IsRelational } from "src/common/decorators/dto";
 import { Status } from "src/common/enums/all.enum";
+import { LedgerTypes } from "src/common/enums/ledger.group";
 import { QueryDto } from "src/common/trait/query.dto";
 
 export class LedgerSearchDto extends QueryDto {
@@ -15,6 +16,11 @@ export class LedgerSearchDto extends QueryDto {
   @IsString()
   @IsOptional()
   code: string;
+
+  @ApiProperty({ required: false, type: "enum", enum: LedgerTypes })
+  @IsString()
+  @IsOptional()
+  type: LedgerTypes;
 
   @ApiProperty({ required: false })
   @IsOptional()

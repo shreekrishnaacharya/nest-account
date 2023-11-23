@@ -71,6 +71,12 @@ export enum PayrollType {
   PLUS = "Plus",
   MINUS = "Minus",
 }
+
+export enum IncomeTaxRule {
+  Y7879 = "78_79",
+  Y7980 = "79_80"
+}
+
 export enum YesNo {
   YES = "Yes",
   NO = "No",

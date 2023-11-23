@@ -14,7 +14,7 @@ import { EmployeeSearchDto } from "../dto/employee.search.dto";
 import { EmployeeDto } from "../dto/employee.dto";
 import { LedgerDto } from "src/ledgers/dto/ledger.dto";
 import { LedgerGroupService } from "src/ledgers/service/ledger.group.service";
-import { LedgerGroupTypes } from "src/common/enums/ledger.group";
+import { LedgerGroupTypes, LedgerTypes } from "src/common/enums/ledger.group";
 
 @Injectable()
 export class EmployeeService extends CommonEntity<Employee> {
@@ -39,7 +39,7 @@ export class EmployeeService extends CommonEntity<Employee> {
   async getEmployeeById(
     employeeId: string
   ): Promise<Employee> {
-    const emp = await this.employeeRepository.findOne({ relations: { ledger: true }, where: { id: employeeId } })
+    const emp = await this.employeeRepository.findOneOrFail({ relations: { ledger: true }, where: { id: employeeId } })
     return emp
   }
 
@@ -48,6 +48,7 @@ export class EmployeeService extends CommonEntity<Employee> {
     ledgerDto.ledger_group_id = await this.ledgerGroupService.getLedgerGroupTypeId(LedgerGroupTypes.EMPLOYEEE);
     ledgerDto.name = employeeDto.ledger_name
     ledgerDto.code = employeeDto.ledger_code
+    ledgerDto.type = LedgerTypes.EMPLOYEE
     delete employeeDto["ledger_name"]
     delete employeeDto["ledger_code"]
     const ledgerModal = await this.ledgerService.addLedger(ledgerDto, userId || "jdu0bmIKzYca");
@@ -70,7 +71,17 @@ export class EmployeeService extends CommonEntity<Employee> {
       ...employeeModal,
       ...employeeDto
     });
-    console.log(employee,employeeDto)
+    console.log(employee, employeeDto)
     return await this.employeeRepository.save(employee);
+  }
+
+  async updateEmployeeMonthlySalary(employeeId: string, plus: number, minus: number) {
+
+    // const employeeModal = await this.employeeRepository.findOneOrFail({ where: { id: employeeId } })
+
+    return await this.employeeRepository.update(employeeId, {
+      amount_plus: plus,
+      amount_minus: minus
+    });
   }
 }

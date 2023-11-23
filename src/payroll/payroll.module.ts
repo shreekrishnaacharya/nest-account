@@ -14,6 +14,8 @@ import { AnnualDeductionController } from "./annual.deduction.controller";
 import { AnnualDeduction } from "./entities/annual.deduction.entity";
 import { AnnualDeductionService } from "./service/annual.deduction.service";
 import { LedgersModule } from "src/ledgers/ledgers.module";
+import { EmployeeModule } from "src/employees/employee.module";
+import { PostPayrollController } from "./post.payroll.controller";
 
 const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
 
@@ -23,9 +25,10 @@ const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
     forwardRef(() => AuthenticationModule),
     forwardRef(() => VoucherModule),
     forwardRef(() => LedgersModule),
+    forwardRef(() => EmployeeModule),
     passportModule,
   ],
-  controllers: [PayrollController, PayrollSettingController, AnnualDeductionController],
+  controllers: [PayrollController, PayrollSettingController, AnnualDeductionController, PostPayrollController],
   providers: [PayrollService, PayrollSettingService, AnnualDeductionService],
   exports: [PayrollService],
 })

@@ -21,6 +21,9 @@ export class AnnualDeduction extends BaseEntity {
     @Column({ type: "double" })
     amount: number;
 
+    @ApiProperty()
+    max_amount: number
+
 
     @ApiProperty()
     @ManyToOne(() => Ledger, (ledger: Ledger) => ledger.id, {

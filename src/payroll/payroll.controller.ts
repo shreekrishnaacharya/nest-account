@@ -65,18 +65,30 @@ export class PayrollController {
     }
   }
 
+  @Get("summary/:employeeId")
+  getSummary(
+    @Param("employeeId") employeeId: string) {
+    // console.log(payrollDto)
+    return this.payrollService.getSummary(employeeId);
+  }
+
+  @Get("post/:employeeId")
+  getPostList(@Param("employeeId") employeeId: string) {
+    return this.payrollService.getPayrollVoucherByEmployeeId(employeeId)
+  }
+
   @Get("/:employeeId/:payrollId")
   getOnePayroll(
     @Param("payrollId") payrollId: string): Promise<Payroll> {
     return this.payrollService.getOnePayroll(payrollId);
   }
 
-  @Patch ("/:employeeId/:payrollId")
+  @Patch("/:employeeId/:payrollId")
   updatePayroll(
     @Param("payrollId") payrollId: string,
     @Param("employeeId") employeeId: string,
-    @Body() payrollDto: PayrollDto): ResponseMessage {
-    this.payrollService.updatePayroll(payrollId, payrollDto, employeeId);
+    @Body("amount") amount: number): ResponseMessage {
+    this.payrollService.updatePayroll(payrollId, amount, employeeId);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Payroll added successfully"

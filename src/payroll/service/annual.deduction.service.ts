@@ -4,15 +4,11 @@ import { Repository } from "typeorm";
 import { CommonEntity } from "src/common/trait/entity.trait";
 import { AnnualDeduction } from "../entities/annual.deduction.entity";
 import { AnnualDeductionDto } from "../dto/annual.deduction.dto";
-import { PayrollService } from "./payroll.service";
-import { PayrollSetting } from "../entities/payroll.setting.entity";
 import { PayrollSettingService } from "./payroll.setting.service";
-import { Page } from "src/common/models/page.model";
-import { IPageable } from "src/common/models/pageable.interface";
-import { PageRequest } from "src/common/models/page-request.model";
-import { IQueryClause } from "src/common/trait/query.dto";
 import { AnnualDeductionCreateDto } from "../dto/annual.deduction.create.dto";
 import { Generator } from "src/common/helpers/id.generator";
+import { EmployeeService } from "src/employees/service/employee.service";
+import { PayrollService } from "./payroll.service";
 
 @Injectable()
 export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
@@ -21,6 +17,8 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
     private deductionRepository: Repository<AnnualDeduction>,
     @Inject(forwardRef(() => PayrollSettingService))
     private payrollSettingService: PayrollSettingService,
+    @Inject(forwardRef(() => PayrollService))
+    private payrollService: PayrollService,
   ) {
     super(deductionRepository);
   }
@@ -41,13 +39,14 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
     });
     return paySetting.map((e) => {
       if (e.ledger_id in deductList) {
-        return deductList[e.ledger_id];
+        return { ...deductList[e.ledger_id], max_amount: e.max_amount };
       }
       return this.deductionRepository.create({
         ledger_id: e.ledger_id,
         amount: 0,
         employee_id: employeeId,
-        ledger: e.ledger
+        ledger: e.ledger,
+        max_amount: e.max_amount
       })
     })
   }
@@ -73,14 +72,16 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
       ledger_id,
       amount
     })
-    return await this.deductionRepository.save(payrollModel);
+    const annu = await this.deductionRepository.save(payrollModel);
+    this.payrollService.employeeUpdateSalary(employeeId)
+    return annu
   }
 
   async updateDeduction(
     payrollDto: AnnualDeductionDto,
     id: string,
   ) {
-    await this.deductionRepository.findOne({
+    const deduction = await this.deductionRepository.findOne({
       where: { id }
     })
     const {
@@ -92,6 +93,7 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
       amount
     })
     await this.deductionRepository.update(id, payrollModel)
+    this.payrollService.employeeUpdateSalary(deduction.employee_id)
   }
 
   async updateAllDeduction(
@@ -108,18 +110,22 @@ export class AnnualDeductionService extends CommonEntity<AnnualDeduction> {
     })
     await this.deleteAllByEmployeeId(employeeId);
     await this.deductionRepository.insert(payrollModel)
+    this.payrollService.employeeUpdateSalary(employeeId)
   }
 
   async deleteAllByEmployeeId(
     employeeId: string
   ) {
     await this.deductionRepository.delete({ employee_id: employeeId });
+    this.payrollService.employeeUpdateSalary(employeeId)
   }
 
   async deleteAllByLedgerId(
     ledgerId: string
   ) {
     await this.deductionRepository.delete({ ledger_id: ledgerId });
+    //update all employee salary with employee list and update method
+    // this.payrollService.employeeUpdateSalary(employeeId)
   }
 
 }

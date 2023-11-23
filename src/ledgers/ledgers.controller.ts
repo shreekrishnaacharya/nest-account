@@ -22,7 +22,6 @@ import { Ledger } from "./entities/ledger.entity";
 import { LedgerService } from "./service/ledgers.service";
 import { IPageable } from "src/common/models/pageable.interface";
 import { PageDto } from "src/common/models/page.dto";
-import { Type } from "class-transformer";
 
 @ApiTags("ledger")
 @ApiBearerAuth()
