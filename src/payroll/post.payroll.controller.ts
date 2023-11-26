@@ -21,12 +21,12 @@ import { EmployeeService } from "src/employees/service/employee.service";
 import { EmployeePage } from "src/employees/dto/employee.response.dto";
 import { EmployeeSearchDto } from "src/employees/dto/employee.search.dto";
 import { PayrollService } from "./service/payroll.service";
-import { SalaryPost, SalaryVoucher } from "src/common/interface/payrollVoucher";
+import { SalaryPost } from "src/common/interface/payrollVoucher";
 
-@ApiTags("post-payroll")
+@ApiTags("payroll-post")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("post-payroll")
+@Controller("payroll-post")
 export class PostPayrollController {
   constructor(
     private employeeService: EmployeeService,

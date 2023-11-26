@@ -13,6 +13,8 @@ import { AnnualDeductionService } from "./annual.deduction.service";
 import { CalculateTax } from "src/common/helpers/incometax.calculator";
 import { EmployeeService } from "src/employees/service/employee.service";
 import { SalaryPost, SalaryVoucher } from "src/common/interface/payrollVoucher";
+import { LedgerService } from "src/ledgers/service/ledgers.service";
+import { LedgerTypes } from "src/common/enums/ledger.group";
 
 @Injectable()
 export class PayrollService extends CommonEntity<Payroll> {
@@ -23,6 +25,8 @@ export class PayrollService extends CommonEntity<Payroll> {
     private annualService: AnnualDeductionService,
     @Inject(forwardRef(() => EmployeeService))
     private employeeService: EmployeeService,
+    @Inject(forwardRef(() => LedgerService))
+    private ledgerService: LedgerService,
     @Inject(forwardRef(() => VoucherService))
     private voucherService: VoucherService
   ) {
@@ -130,6 +134,7 @@ export class PayrollService extends CommonEntity<Payroll> {
 
   async getPayrollVoucherByEmployeeId(employeeId: string): Promise<SalaryPost> {
     const employeeModel = await this.employeeService.getEmployeeById(employeeId);
+    const incomeTaxModel = await this.ledgerService.getOneLedgerByType(LedgerTypes.INCOME_TAX)
     const payroll = await this.payrollRepository.find({
       relations: { ledger: true },
       where: {
@@ -139,8 +144,14 @@ export class PayrollService extends CommonEntity<Payroll> {
         type: "DESC",
       },
     });
-    const voucherDetail: SalaryPost = null;
-    voucherDetail.employee_id = employeeId
+    const voucherDetail: SalaryPost = {
+      employee_id: employeeId,
+      employee: employeeModel,
+      plus: [],
+      minus: [],
+      plusTotal: 0,
+      minusTotal: 0
+    };
     let drTotal = 0, crTotal = 0;
     payroll.forEach((e) => {
       if (PayrollType.MINUS == e.type) {
@@ -163,27 +174,44 @@ export class PayrollService extends CommonEntity<Payroll> {
     })
     const annualList = await this.annualService.getAnnualDeduction(employeeId);
     annualList.forEach((e) => {
+      const amt = parseFloat((e.amount / 12).toFixed(2))
       voucherDetail.minus.push({
         dr_cr: DrCr.DR,
         ledger: e.ledger,
         ledger_id: e.ledger_id,
-        amount: parseFloat((e.amount / 12).toFixed(2))
+        amount: amt
       })
-      drTotal += e.amount;
+      drTotal += amt
     })
     voucherDetail.plus.push({
       dr_cr: DrCr.DR,
       ledger: employeeModel.ledger,
       ledger_id: employeeModel.ledger_id,
-      amount: drTotal
+      amount: crTotal
+    })
+
+
+    const annualAmount = annualList.reduce((total, annual) => {
+      return annual.amount + total
+    }, 0)
+    const taxable = (crTotal * 12) - (annualAmount)
+    const taxAmount = parseFloat((CalculateTax(IncomeTaxRule.Y7980, taxable) / 12).toFixed(2))
+    drTotal += taxAmount;
+    voucherDetail.minus.push({
+      dr_cr: DrCr.DR,
+      ledger: incomeTaxModel,
+      ledger_id: incomeTaxModel.id,
+      amount: taxAmount
     })
 
     voucherDetail.minus.push({
       dr_cr: DrCr.CR,
       ledger: employeeModel.ledger,
       ledger_id: employeeModel.ledger_id,
-      amount: crTotal
+      amount: drTotal
     })
+    voucherDetail.minusTotal = drTotal
+    voucherDetail.plusTotal = crTotal
     return voucherDetail
   }
 

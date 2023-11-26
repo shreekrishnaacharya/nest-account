@@ -10,7 +10,7 @@ import { LedgerSearchDto } from "../dto/ledger.search.dto";
 import { Ledger } from "../entities/ledger.entity";
 import { IPageable } from "src/common/models/pageable.interface";
 import { IQueryDto } from "src/common/trait/query.dto";
-import { LedgerGroupTypes } from "src/common/enums/ledger.group";
+import { LedgerGroupTypes, LedgerTypes } from "src/common/enums/ledger.group";
 
 @Injectable()
 export class LedgerService extends CommonEntity<Ledger> {
@@ -56,6 +56,18 @@ export class LedgerService extends CommonEntity<Ledger> {
     });
     if (!ledger) {
       throw new NotFoundException();
+    }
+    return ledger;
+  }
+
+  async getOneLedgerByType(ledgerType: LedgerTypes): Promise<Ledger> {
+    const ledger = await this.ledgerRepository.findOne({
+      where: {
+        type: ledgerType,
+      },
+    });
+    if (!ledger) {
+      throw new NotFoundException(`Ledger type ${ledgerType} not found`);
     }
     return ledger;
   }
