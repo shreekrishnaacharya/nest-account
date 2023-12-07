@@ -113,4 +113,5 @@ export enum VoucherType {
   SALES = "sales",
   PAYMENT = "payment",
   CONTRA = "contra",
+  PAYROLL = "payroll",
 }

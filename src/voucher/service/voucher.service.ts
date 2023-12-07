@@ -92,6 +92,14 @@ export class VoucherService extends CommonEntity<Voucher> {
     return this.journalVoucher(journalVoucher, userId, VoucherType.CONTRA);
   }
 
+
+  async payrollEntry(
+    journalVoucher: VoucherEntryDto,
+    userId: string
+  ): Promise<Voucher> {
+    return this.journalVoucher(journalVoucher, userId, VoucherType.PAYROLL);
+  }
+
   async journalEntry(
     journalVoucher: VoucherEntryDto,
     userId: string
@@ -123,6 +131,7 @@ export class VoucherService extends CommonEntity<Voucher> {
       acc[item.id] = item;
       return acc;
     }, {});
+
 
     const drNarration = drList
       .map((e) => {

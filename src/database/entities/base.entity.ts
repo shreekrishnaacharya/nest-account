@@ -11,9 +11,10 @@ export abstract class BaseEntity extends BaseMinEntity {
   @Column({ name: "updated_at", nullable: false, type: "timestamp" })
   public updatedAt: Date;
 
-  @ApiProperty({ type: Date })
-  @Column({ name: "deleted_at", nullable: true, type: "timestamp" })
-  public deletedAt: Date;
+  // @ApiProperty({ type: Date })
+  // @Column({ name: "deleted_at", nullable: true, type: "timestamp" })
+  // public deletedAt: Date;
+  
 
   @BeforeInsert()
   public beforeInsert() {

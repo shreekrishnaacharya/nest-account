@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MonthList } from "src/common/enums/all.enum";
+import { MonthList, PayrollType } from "src/common/enums/all.enum";
+import { Generator } from "src/common/helpers/id.generator";
 import { BaseEntity } from "src/database/entities/base.entity";
-import { Column, Entity } from "typeorm";
+import { BeforeInsert, Column, Entity } from "typeorm";
 
 @Entity()
 export class PayrollPost extends BaseEntity {
@@ -19,21 +20,25 @@ export class PayrollPost extends BaseEntity {
   user_id: string;
 
   @ApiProperty()
+  @Column("char", { length: 12 })
+  group_id: string;
+
+  @ApiProperty()
   @Column("char", {
     length: 12,
   })
   employee_id: string;
 
   @ApiProperty()
-  @Column({ type: "double" })
-  plus_amount: number;
+  @Column({ type: "enum", enum: PayrollType })
+  type: PayrollType;
 
   @ApiProperty()
   @Column({ type: "double" })
-  minus_amount: number;
+  amount: number;
 
   @ApiProperty()
   @Column({ type: "enum", enum: MonthList })
-  type: MonthList;
+  month: MonthList;
 
 }

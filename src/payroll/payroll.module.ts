@@ -16,12 +16,14 @@ import { AnnualDeductionService } from "./service/annual.deduction.service";
 import { LedgersModule } from "src/ledgers/ledgers.module";
 import { EmployeeModule } from "src/employees/employee.module";
 import { PostPayrollController } from "./post.payroll.controller";
+import { PayrollPost } from "./entities/payroll.post.entity";
+import { PayrollPostService } from "./service/payroll.post.service";
 
 const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Payroll, PayrollSetting, AnnualDeduction]),
+    TypeOrmModule.forFeature([Payroll, PayrollSetting, AnnualDeduction, PayrollPost]),
     forwardRef(() => AuthenticationModule),
     forwardRef(() => VoucherModule),
     forwardRef(() => LedgersModule),
@@ -29,7 +31,7 @@ const passportModule = PassportModule.register({ defaultStrategy: "jwt" });
     passportModule,
   ],
   controllers: [PayrollController, PayrollSettingController, AnnualDeductionController, PostPayrollController],
-  providers: [PayrollService, PayrollSettingService, AnnualDeductionService],
+  providers: [PayrollService, PayrollSettingService, AnnualDeductionService, PayrollPostService],
   exports: [PayrollService],
 })
 export class PayrollModule { }

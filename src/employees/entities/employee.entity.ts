@@ -82,12 +82,12 @@ export class Employee extends BaseEntity {
     @Column({ type: "enum", enum: MarriedStatus, default: MarriedStatus.UNMARRIED })
     married: MarriedStatus;
 
-    @ApiProperty()
-    @Column({ default: 0 })
+    @ApiProperty({ required: false })
+    @Column({ default: 0, nullable: true })
     amount_plus: number;
 
-    @ApiProperty()
-    @Column({ default: 0 })
+    @ApiProperty({ required: false })
+    @Column({ default: 0, nullable: true })
     amount_minus: number;
 
     @ManyToOne(() => Ledger, (ledger) => ledger.id, {

@@ -7,7 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Page } from "src/common/models/page.model";
 import { CommonEntity } from "src/common/trait/entity.trait";
 import { LedgerService } from "src/ledgers/service/ledgers.service";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { IPageable } from "src/common/models/pageable.interface";
 import { Employee } from "../entities/employee.entity";
 import { EmployeeSearchDto } from "../dto/employee.search.dto";
@@ -29,18 +29,19 @@ export class EmployeeService extends CommonEntity<Employee> {
     super(employeeRepository);
   }
 
-  async getEmployees(
-    pageable: IPageable,
-    employeeSearchDto: EmployeeSearchDto
-  ): Promise<Page<Employee>> {
-    return await this.findAllByPage(pageable, employeeSearchDto);
-  }
-
   async getEmployeeById(
     employeeId: string
   ): Promise<Employee> {
     const emp = await this.employeeRepository.findOneOrFail({ relations: { ledger: true }, where: { id: employeeId } })
     return emp
+  }
+
+  async getAllActiveEmployee(): Promise<Employee[]> {
+    return await this.employeeRepository.find();
+  }
+
+  async getAllActiveEmployeesByIds(employeeIds: string[]): Promise<Employee[]> {
+    return await this.employeeRepository.find({ where: { id: In(employeeIds) } });
   }
 
   async addEmployee(employeeDto: EmployeeDto, userId: string): Promise<Employee> {
@@ -76,9 +77,8 @@ export class EmployeeService extends CommonEntity<Employee> {
   }
 
   async updateEmployeeMonthlySalary(employeeId: string, plus: number, minus: number) {
-
+    console.log(plus,minus)
     // const employeeModal = await this.employeeRepository.findOneOrFail({ where: { id: employeeId } })
-
     return await this.employeeRepository.update(employeeId, {
       amount_plus: plus,
       amount_minus: minus

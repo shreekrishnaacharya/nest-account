@@ -43,7 +43,8 @@ export class EmployeeController {
     @Query() pageDto: PageDto
   ): Promise<EmployeePage> {
     const pageable: IPageable = PageRequest.from(pageDto);
-    return this.employeeService.getEmployees(pageable, employeeSearchDto);
+    // return this.employeeService.getEmployees(pageable, employeeSearchDto);
+    return this.employeeService.findAllByPage(pageable, employeeSearchDto);
   }
 
   @ApiResponse({

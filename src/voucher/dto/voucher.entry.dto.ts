@@ -24,7 +24,7 @@ export class VoucherEntryDto {
 
   @ApiProperty()
   // @IsDateInFormat("YYYY-MM-DD")
-  @IsNotEmpty({ message: 'Nepali date cannot be empty' })
+  @IsNotEmpty({ message: 'Nepali date cannot be empty' })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
   transaction_date_np: string;
 
   @ApiProperty()

@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/commo
 import { InjectRepository } from "@nestjs/typeorm";
 import { VoucherEntryDto } from "src/voucher/dto/voucher.entry.dto";
 import { VoucherService } from "src/voucher/service/voucher.service";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { Payroll } from "../entities/payroll.entity";
 import { PayrollDto } from "../dto/payroll.dto";
 import { DrCr, IncomeTaxRule, PayrollType } from "src/common/enums/all.enum";
@@ -27,8 +27,8 @@ export class PayrollService extends CommonEntity<Payroll> {
     private employeeService: EmployeeService,
     @Inject(forwardRef(() => LedgerService))
     private ledgerService: LedgerService,
-    @Inject(forwardRef(() => VoucherService))
-    private voucherService: VoucherService
+    // @Inject(forwardRef(() => VoucherService))
+    // private voucherService: VoucherService
   ) {
     super(payrollRepository);
   }
@@ -131,6 +131,7 @@ export class PayrollService extends CommonEntity<Payroll> {
     });
     return invoices;
   }
+
 
   async getPayrollVoucherByEmployeeId(employeeId: string): Promise<SalaryPost> {
     const employeeModel = await this.employeeService.getEmployeeById(employeeId);
