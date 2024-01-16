@@ -19,11 +19,6 @@ export class PayrollPostDto {
   @ApiProperty({ type: Array<String> })
   employees: string[];
 
-  @ApiProperty({ type: "enum", enum: MonthList })
-  @IsString()
-  @IsNotEmpty()
-  month: MonthList;
-
   @ApiProperty()
   @IsDateString(undefined, { message: 'Invalid date format. Please use the format YYYY-MM-DD' })
   @IsNotEmpty({ message: 'English date cannot be empty' })

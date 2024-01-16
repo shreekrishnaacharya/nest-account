@@ -11,7 +11,7 @@ export class PayrollSetting extends BaseEntity {
   ledger_id: string;
 
   @ApiProperty()
-  @Column({ type: 'double', default: null, nullable: true })
+  @Column({ type: 'double', precision: 10, scale: 2, default: null, nullable: true })
   max_amount: number;
 
 

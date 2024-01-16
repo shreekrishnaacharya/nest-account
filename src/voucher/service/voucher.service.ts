@@ -73,53 +73,60 @@ export class VoucherService extends CommonEntity<Voucher> {
 
   async purchaseEntry(
     journalVoucher: VoucherEntryDto,
-    userId: string
+    userId: string,
+    groupId?: string
   ): Promise<Voucher> {
-    return this.journalVoucher(journalVoucher, userId, VoucherType.PURCHASE);
+    return this.journalVoucher(journalVoucher, userId, VoucherType.PURCHASE, groupId);
   }
 
   async paymentEntry(
     journalVoucher: VoucherEntryDto,
-    userId: string
+    userId: string,
+    groupId?: string
   ): Promise<Voucher> {
-    return this.journalVoucher(journalVoucher, userId, VoucherType.PAYMENT);
+    return this.journalVoucher(journalVoucher, userId, VoucherType.PAYMENT, groupId);
   }
 
   async contraEntry(
     journalVoucher: VoucherEntryDto,
-    userId: string
+    userId: string,
+    groupId?: string
   ): Promise<Voucher> {
-    return this.journalVoucher(journalVoucher, userId, VoucherType.CONTRA);
+    return this.journalVoucher(journalVoucher, userId, VoucherType.CONTRA, groupId);
   }
 
 
   async payrollEntry(
     journalVoucher: VoucherEntryDto,
-    userId: string
+    userId: string,
+    groupId?: string
   ): Promise<Voucher> {
-    return this.journalVoucher(journalVoucher, userId, VoucherType.PAYROLL);
+    return this.journalVoucher(journalVoucher, userId, VoucherType.PAYROLL, groupId);
   }
 
   async journalEntry(
     journalVoucher: VoucherEntryDto,
-    userId: string
+    userId: string,
+    groupId?: string
   ): Promise<Voucher> {
-    return this.journalVoucher(journalVoucher, userId, VoucherType.JOURNAL);
+    return this.journalVoucher(journalVoucher, userId, VoucherType.JOURNAL, groupId);
   }
 
   async receiveEntry(
     journalVoucher: VoucherEntryDto,
-    userId: string
+    userId: string,
+    groupId?: string
   ): Promise<Voucher> {
-    return this.journalVoucher(journalVoucher, userId, VoucherType.RECEIVE);
+    return this.journalVoucher(journalVoucher, userId, VoucherType.RECEIVE, groupId);
   }
 
   private async journalVoucher(
     journalVoucher: VoucherEntryDto,
     userId: string,
-    voucherType: VoucherType
+    voucherType: VoucherType,
+    groupId?: string
   ): Promise<Voucher> {
-    //check ledgers list validity
+    //checking ledgers list validity
     const drList = journalVoucher.drEntry.map((e) => e.ledger_id);
     const crList = journalVoucher.crEntry.map((e) => e.ledger_id);
     const ledgersList = [...drList, ...crList];
@@ -178,7 +185,6 @@ export class VoucherService extends CommonEntity<Voucher> {
     const { transaction_date_en, transaction_date_np, narration } =
       journalVoucher;
     const currentYear = await this.fiscalService.getCurrentYear();
-    console.log("user:", userId)
     const voucherRaw = this.voucherRepository.create({
       fiscal_year_id: currentYear.id,
       posted_by: userId,
@@ -186,7 +192,9 @@ export class VoucherService extends CommonEntity<Voucher> {
       transaction_date_en,
       transaction_date_np,
       type: voucherType,
+      group_id: groupId != undefined ? groupId : null
     });
+
     const voucherModel = await this.voucherRepository.save(voucherRaw);
     const voucherMeta = [...drentry, ...crentry].map((e) => {
       return { ...e, voucher_id: voucherModel.id };

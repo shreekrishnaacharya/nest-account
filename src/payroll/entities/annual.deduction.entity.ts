@@ -18,7 +18,7 @@ export class AnnualDeduction extends BaseEntity {
     employee_id: string;
 
     @ApiProperty()
-    @Column({ type: "double" })
+    @Column({ type: "double" , precision: 10, scale: 2})
     amount: number;
 
     @ApiProperty()

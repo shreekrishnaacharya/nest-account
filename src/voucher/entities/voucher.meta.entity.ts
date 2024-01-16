@@ -24,7 +24,7 @@ export class VoucherMeta extends BaseMinEntity {
   ledger_id: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ type: "double", precision: 10, scale: 2 })
   amount: number;
 
   @ApiProperty()

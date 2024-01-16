@@ -34,11 +34,11 @@ export class PayrollPost extends BaseEntity {
   type: PayrollType;
 
   @ApiProperty()
-  @Column({ type: "double" })
+  @Column({ type: "double", precision: 10, scale: 2 })
   amount: number;
 
   @ApiProperty()
-  @Column({ type: "enum", enum: MonthList })
+  @Column({ type: "enum", enum: MonthList, default: null })
   month: MonthList;
 
 }

@@ -7,7 +7,6 @@ import { AnnualDeductionDto } from "../dto/annual.deduction.dto";
 import { PayrollSettingService } from "./payroll.setting.service";
 import { AnnualDeductionCreateDto } from "../dto/annual.deduction.create.dto";
 import { Generator } from "src/common/helpers/id.generator";
-import { EmployeeService } from "src/employees/service/employee.service";
 import { PayrollService } from "./payroll.service";
 
 @Injectable()

@@ -20,7 +20,7 @@ export class Payroll extends BaseEntity {
   type: PayrollType;
 
   @ApiProperty()
-  @Column({ type: 'double' })
+  @Column({ type: 'double', precision: 10, scale: 2 })
   amount: number;
 
   @ApiProperty({

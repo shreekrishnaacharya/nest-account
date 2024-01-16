@@ -27,6 +27,8 @@ import { EmployeeSalaryPostPage } from "./dto/employee.post.response.dto";
 import { EmployeePostSearchDto } from "./dto/employee.post.search.dto";
 import { PayrollPostDto } from "./dto/payroll.post.dto";
 import { ResponseMessage, ResponseStatus } from "src/common/enums/response-status.enum";
+import { PayrollPost } from "./entities/payroll.post.entity";
+import { PayrollEntryDto } from "./dto/payroll.entry.dto";
 
 @ApiTags("payroll-post")
 @ApiBearerAuth()
@@ -55,7 +57,7 @@ export class PostPayrollController {
     const pageable: IPageable = PageRequest.from(pageDto);
     const employeeList = await this.employeeService.findAllByPage(pageable, employeeSearchDto, [{ key: "status", value: Status.ACTIVE, clause: "=" }]);
     const empIds = employeeList.elements.map(e => e.id);
-    const postList = await this.payrollPostService.getPostEmployeeByMonth(empIds, month);
+    const postList = await this.payrollPostService.getPostEmployeeByEmpIdAndMonth(empIds, month);
     const element = employeeList.elements.map((e, i) => {
       const post = postList.filter(k => (k.employee_id === e.id))
       if (post === undefined) {
@@ -71,11 +73,38 @@ export class PostPayrollController {
   createSalaryPost(
     @Body() payrollPostDto: PayrollPostDto,
     @Request() req): ResponseMessage {
-    this.payrollPostService.createSalaryPostByEmployeeId(payrollPostDto, req.user.userId);
+    this.payrollPostService.createSalaryReleaseByEmployeeId(payrollPostDto, req.user.userId);
     return {
       status: ResponseStatus.SUCCESS,
       message: "Payroll added successfully"
     }
+  }
+
+  @Post("/post/:employeeId")
+  async postSalary(
+    @Param("employeeId") employeeId: string,
+    @Body() payrollEntryDto: PayrollEntryDto
+  ): Promise<ResponseMessage> {
+    console.log(payrollEntryDto)
+    const result = await this.payrollPostService.createSalaryPostByEmployeeId(employeeId,payrollEntryDto, "jdu0bmIKzYca");
+    if (result) {
+      return {
+        status: ResponseStatus.SUCCESS,
+        message: "Payroll added successfully"
+      }
+    }
+    return {
+      status: ResponseStatus.ERROR,
+      message: "Payroll not added"
+    }
+  }
+
+  @Get("/history/:employeeId")
+  getPostViewByEmpIdOrMonth(
+    @Param("employeeId") employeeId: string,
+    @Query("month") month: MonthList
+  ): Promise<PayrollPost[]> {
+    return this.payrollPostService.getPostEmployeeByEmpId(employeeId, month);
   }
 
   @Get("/:employeeId")

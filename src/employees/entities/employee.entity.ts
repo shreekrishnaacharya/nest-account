@@ -83,11 +83,11 @@ export class Employee extends BaseEntity {
     married: MarriedStatus;
 
     @ApiProperty({ required: false })
-    @Column({ default: 0, nullable: true })
+    @Column({ default: 0, precision: 10, scale: 2, nullable: true, type: "double" })
     amount_plus: number;
 
     @ApiProperty({ required: false })
-    @Column({ default: 0, nullable: true })
+    @Column({ default: 0, precision: 10, scale: 2, nullable: true, type: "double" })
     amount_minus: number;
 
     @ManyToOne(() => Ledger, (ledger) => ledger.id, {

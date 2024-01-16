@@ -42,5 +42,5 @@ export class PageRequest implements IPageable {
     }
     const pageSize = _end - _start;
     return new PageRequest(_start, pageSize, Sort.from(_sort, _order));
-  }
+  } 
 }

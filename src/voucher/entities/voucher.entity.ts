@@ -38,12 +38,17 @@ export class Voucher extends BaseEntity {
   fiscal_year_id: string;
 
   @ApiProperty()
-  @Column({default:null})
+  @Column({ default: null })
   approved_date: Date;
 
   @ApiProperty()
   @Column()
   narration: string;
+
+  @ApiProperty()
+  @Column("char", { length: 12, default: null })
+  group_id: string;
+
 
   @ApiProperty({ type: "enum", enum: VoucherStatus })
   @Column({
